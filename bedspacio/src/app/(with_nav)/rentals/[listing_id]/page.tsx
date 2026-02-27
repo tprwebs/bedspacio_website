@@ -1,5 +1,3 @@
-import Footer from "@/components/Footer";
-import NavigationBar from "@/components/navigationBar";
 import InquiryForm from "./InquiryForm";
 
 import ArrowLong from '@/asset/icon/arrow-long.svg'
@@ -20,8 +18,6 @@ export default async function ListingInfoPage ({ params }: Props ) {
 
     return (
         <div className="flex flex-col items-start w-full min-h-screen">
-            <NavigationBar />
-
             <div className="flex items-center w-full px-[8rem] py-[1rem]">
                 <span>{`Rentals > Listings >`}</span>
             </div>
@@ -125,8 +121,6 @@ export default async function ListingInfoPage ({ params }: Props ) {
                     </div>
                 </div>
             </section>
-
-            <Footer />
         </div>
     )
 }

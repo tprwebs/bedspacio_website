@@ -1,14 +1,19 @@
 "use client"
 
-import { useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 import FilterIcon from '@/asset/icon/filter.svg'
 import Search from '@/asset/icon/search.svg'
 import ArrowDown from '@/asset/icon/arrow-down.svg'
 
+
 export default function SearchFilter() {
     const regex = /^\d*\.?\d*$/;
+
+    const searchParams = useSearchParams();
+
 
     const [openBranch, setOpenBranch] = useState<boolean>(false);
     const [openRoomType, setOpenRoomType] = useState<boolean>(false);
@@ -17,6 +22,15 @@ export default function SearchFilter() {
     const [selectedRoomType, setSelectedRoomType] = useState<string>('');
     const [budget, setBudget] = useState<string>('')
 
+    useEffect(() => {
+        const branchParams = searchParams.get("branch") ?? "";
+        const roomTypeParams = searchParams.get("room_type") ?? "";
+        const budgetParams = searchParams.get("budget") ?? "";
+
+        setSelectedBranch(branchParams);
+        setSelectedRoomType(roomTypeParams);
+        setBudget(budgetParams);
+    }, [ searchParams ]);
 
     const branches = [{
         branch_1: 'Branch 1',
@@ -25,6 +39,21 @@ export default function SearchFilter() {
     }];
 
     const room_type = [ 'Bedspace', 'Apartment' ];
+    
+    const href = useMemo(() => {
+        const params = new URLSearchParams();
+
+        if (selectedBranch) params.set('branch', selectedBranch);
+        if (selectedRoomType) params.set('room_type', selectedRoomType);
+        if (budget) params.set('budget', budget);
+
+        const parameters = params.toString();
+        return parameters ? `/rentals?${parameters}` : '/rentals';
+    }, [selectedBranch, selectedRoomType, budget])
+
+    const getSearchDetail = () => {
+        console.log('Filter: ',selectedBranch, selectedRoomType, budget)
+    }
 
 
     return (
@@ -79,7 +108,7 @@ export default function SearchFilter() {
                 </div>
             </div>
 
-            <Link href="" className='flex items-center gap-2 rounded-full bg-[#0077C0] cursor-pointer hover:bg-[#1D242B] active:bg-[#0077C0] text-[#FAFAFA] h-full px-6 py-4 text-[16px] font-bold border-2 border-[#FAFAFA] transition-all duration-100'>
+            <Link href={href} onClick={getSearchDetail} className='flex items-center gap-2 rounded-full bg-[#0077C0] cursor-pointer hover:bg-[#1D242B] active:bg-[#0077C0] text-[#FAFAFA] h-full px-6 py-4 text-[16px] font-bold border-2 border-[#FAFAFA] transition-all duration-100'>
                 <Search className="stroke-[#FAFAFA] h-[20px] w-[20px] fill-[#FAFAFA] color-[#FAFAFA]"/>
                 <span className='text-[18px]'>Find a Room</span>
             </Link>

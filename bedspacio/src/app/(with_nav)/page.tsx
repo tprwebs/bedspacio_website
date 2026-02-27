@@ -1,10 +1,8 @@
 "use client"
 
-import NavigationBar from '@/components/navigationBar'
 import SearchFilter from '@/components/SearchFilter'
 import FrequentlyAskedQuestions from '@/components/FrequentlyAskedQuestion'
 import HomeInquiry from '@/components/HomeInquiry'
-import Footer from '@/components/Footer'
 
 import ArrowRight from '@/asset/icon/arrow-right.svg'
 import Quote from '@/asset/icon/quote.svg'
@@ -17,7 +15,6 @@ export default function Home() {
 
     return (
         <div className="flex flex-col min-h-screen items-center justify-start w-full">
-            <NavigationBar />
             
 
             <section className="flex flex-col w-full items-start justify-start h-[800px] bg-[url(/image/bedspaco-hero-x-large-example.jpg)] bg-cover">
@@ -245,8 +242,6 @@ export default function Home() {
 
             <FrequentlyAskedQuestions />
             <HomeInquiry />
-
-            <Footer />
         </div>
     )
 }

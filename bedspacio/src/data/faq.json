@@ -22,7 +22,7 @@
     { 
         "id": 5,
         "question": "When can I get my refund?",
-        "answer": "If you finished your contract, refund is expected. It is refunded 30 days after your contract date. You will receive an email prior to 30 days for your review of the refund details."
+        "answer": "If you finished your contract, refund is expected. It is refunded 30 days after your contract end-date. You will receive an email prior to 30 days for your review of the refund details."
     },
     { 
         "id": 6,
@@ -41,7 +41,7 @@
     },
     { 
         "id": 9,
-        "question": "Am I allowed to bring stuff like big bags, table, etc?",
+        "question": "Am I allowed to bring stuff like guitars, table, etc?",
         "answer": "Big stuffs are not allowed in the units as we have limited space offered. If you bring these to the unit, it will be confiscated and for penalty upon redemption."
     },
     { 

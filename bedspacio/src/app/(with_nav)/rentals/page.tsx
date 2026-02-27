@@ -1,7 +1,4 @@
-"use client"
 
-import Footer from "@/components/Footer"
-import NavigationBar from "@/components/navigationBar"
 import SearchFilter from "@/components/SearchFilter"
 
 import Link from "next/link"
@@ -35,12 +32,24 @@ import Link from "next/link"
     ----- THIS IS AN EXAMPLE ----- 
 */
 
-export default function Rentals() {
+export default async function Rentals({ searchParams }: { searchParams: Promise <{ 
+    branch?: string, 
+    room_type?: string, 
+    budget?: string 
+}>
+}) {
+
+    const params = await searchParams;
+
+    const branch = params.branch;
+    const room_type = params.room_type;
+    const budget = params.budget;
+
+    console.log(params);
+
     return (
         <div className="flex flex-col items-center justify-start min-h-scree w-auto">
-            <NavigationBar />
-
-            <section className="relative flex flex-col items-center justify-center w-full h-[350px] bg-[#C7EEFF] overflow-hidden">
+            <section className="relative flex flex-col items-center justify-center w-full h-[300px] bg-[#C7EEFF] overflow-hidden">
                 <img src="/asset/rentas_bg_image.jpg" alt=""  className="inset-0 w-full h-full object-cover opacity-50"/>
 
                 <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 flex w-full h-full items-center justify-center px-[8rem]">
@@ -90,9 +99,6 @@ export default function Rentals() {
 
                 </div>
             </section>
-
-
-            <Footer />
         </div>
     )
 }
