@@ -1,0 +1,94 @@
+[
+    { 
+        "id": 1,
+        "question": "Can I use my deposit as rental payment?",
+        "answer": "Rental payment should be settled every 30th of the month if your contract is 2 months and above. Deposit is not allowed to be used as rental payment. Deposit is refundable upon completion of contract."
+    },
+    { 
+        "id": 2,
+        "question": "Do I have an advanced rental payment?",
+        "answer": "Upon move-in, your terms of payment is 2 months deposit only plus utility deposit for excluded utilities. NO ADVANCE PAYMENT. Meaning upon your stay in the unit, you will pay on a monthly basis of your consumption. For example, you started 1st of the month, you will pay on 30th of the month for your 1st to 30th stay. This is applicable for contract two months and above only but to confirm, ask your property manager."
+    },
+    { 
+        "id": 3,
+        "question": "What if I do not finish my contract?",
+        "answer": "Upon pre-termination of contract for whatever reason, all your deposit/s will be forfeited. You need to advise your property manager about it."
+    },
+    { 
+        "id": 4,
+        "question": "What should I pay if I renew?",
+        "answer": "Upon renewal, your deposit/s remain. You will continuously pay for rental only every 30th of the month"
+    },
+    { 
+        "id": 5,
+        "question": "When can I get my refund?",
+        "answer": "If you finished your contract, refund is expected. It is refunded 30 days after your contract date. You will receive an email prior to 30 days for your review of the refund details."
+    },
+    { 
+        "id": 6,
+        "question": "How can I get my refund?",
+        "answer": "Refund is in two (2) forms: 1.) Check pick-up under your name. 2.) Bank Deposit-fee of PHP 200.00"
+    },
+    { 
+        "id": 7,
+        "question": "What if I lost my key?",
+        "answer": "In case of lost key, proceed to the office for replacement. Prepare 100 pesos payment as replacement fee."
+    },
+    { 
+        "id": 8,
+        "question": "What will happen to my contract if I don't advise 30 days prior of end contract?",
+        "answer": "Your contract will automatically renew if failure to notify 30 days ahead of time."
+    },
+    { 
+        "id": 9,
+        "question": "Am I allowed to bring stuff like big bags, table, etc?",
+        "answer": "Big stuffs are not allowed in the units as we have limited space offered. If you bring these to the unit, it will be confiscated and for penalty upon redemption."
+    },
+    { 
+        "id": 10,
+        "question": "If I don't pay on my due date without notice, what will happen?",
+        "answer": "Every 30th is the due date for rental payment. Failure to pay and notify your property manager, your bed will be taken away and your padlock will be changed. For late payment, penalty of 50-100 per day shall be added to your Rental fee."
+    },
+    { 
+        "id": 12,
+        "question": "Is smoking and drinking of liquors allowed in the unit?",
+        "answer": "For strict compliance, smoking and drinking of liquors are not allowed in the unit. Storing of liquors also in the unit is prohibited and subject for penalty minimum of Php 1000.00 or possible contract termination."
+    },
+    {
+        "id": 13,
+        "question": "What if my contract is terminated due to violation committed?",
+        "answer": "The lessor may terminate the contract due to the severity and consistency of your violations effective immediately. All deposit will be forfeited in the event it will happen."
+    }, 
+    {
+        "id": 14,
+        "question":"Who shall I contact for my concerns or report?",
+        "answer": "Our property managers are designated to help you. Contact them for further assisstance."
+    },
+    {
+        "id": 15,
+        "question":"What are the basic prohibition in the unit? BEDSPACE and APARTMENT",
+        "answer": [
+            "Use the premises for prostitution, gambling, cabaret, smoking dens, or other purposes prohibited or made illegal by law, order or ordinances and sexual actions that can affect/intimidated the other tenants.",
+            "Convert the leased premises into any other purposes other than to which parties herein have intented it.",
+            "Smoking and storing or drinking of liquor inside the leased premises is strictly prohibited.",
+            "Store, deposit or place hazardous inflammable and explosive goods and things therein.",
+            "Store, place or deposit in the leased premises any merchandise, goods and substances, the storing, keeping, or depositing of which is prohibited by law, rules and regulations order or ordinances of the national or city government, or by the terms of the policies if insurance covering said leased premises.",
+            "Any form of laundry is not allowed in the unit.",
+            "Bringing pets inside the unit is not allowed.",
+            "Visitors are not allowed to enter the leased premises.",
+            "Harrasment in any form is prohibited.",
+            "Any form of noise that can disturb others is not allowed.",
+            "Sleeping on the sofa or any part of the house except to your rented bed is not allowed. (Bedspace)",
+            "Littering in any part of the unit and hallway is prohibited.",
+            "Excess things or items outside the cabinet is not allowed in the unit and for automatic disposal. (bedspace)",
+            "Hanging of clothes, pants or any garment outside the cabinet is not allowed. (Bedspace)",
+            "Bringing of additional furniture/appliances without the written consent is not allowed. (Bedspace)",
+            "Cell Phone conversation inside the room is not allowed. (Bedspace)",
+            "Any action that will threaten the security and peaceful living of other tenants is strictly prohibited.",
+            "Any form of disrepect to co-tenant and to authorized personnel is not allowed.",
+            "Usage of things/items that belongs to others without permission is a form of stealing and stricly prohibited in the unit.",
+            "Any commotion that will result to harm or damage to a person or property that will take place in the unit is not allowed.",
+            "Sexual activities, NUDITY or inappropriate attire like wearing underwear or any intimidating attire in the unit or hallway is prohibited."
+        ]
+    }
+]
