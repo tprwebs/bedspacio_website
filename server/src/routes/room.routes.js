@@ -93,25 +93,6 @@ roomRoute.get('/details/:id', async (req, res, next) => {
             return res.status(400).json({ message: "Invalid room id" });
         }
 
-        // FETCH
-        /* 
-            Room name
-            Room Type
-            Gender
-            Description
-            Room images
-            Inclusions
-            Property Manager
-            Landmarks
-            Branch
-            Payment Terms
-            Address of the branch via BRANCH model (bedspacio.branch)
-
-            maximum_pax
-            available slot
-        */
-
-        const domain = [];
 
         const roomDetail = await searchRead({
             model: "bedspacio.room",
@@ -189,6 +170,45 @@ roomRoute.get('/details/:id', async (req, res, next) => {
 })
 
 
+
+roomRoute.get('/:id/images', async (req, res, next ) => {
+    try {
+        const room_id = Number(req.params.id);
+        
+        const roomImages = await searchRead({
+            model: "bedspacio.room",
+            domain: [["id", "=", room_id]],
+            fields: [ "image_ids" ],
+            limit: 1,
+            offset: Number(req.query.offset || 0),
+            order: "id asc"
+        });
+
+        const data = roomImages[0];
+
+        const imageIds = [...new Set(roomImages.flatMap(img => img.image_ids || []))];
+
+        const images = data.image_ids.length
+            ? await readByIds({
+                model: "bedspacio.room.image",
+                ids: data.image_ids,
+                fields: [
+                    "image",
+                    "image_order"
+                ]
+            }) : [] 
+
+        console.log("Image ids: ", imageIds)
+
+        res.json({
+            id: room_id,
+            image: images
+        });
+
+    } catch (err) {
+        next(err);
+    }
+})
 
 
 export default roomRoute;

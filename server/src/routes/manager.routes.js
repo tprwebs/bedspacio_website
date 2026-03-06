@@ -19,6 +19,7 @@ managerRoute.get('/', async (req, res, next) => {
             domain,
             fields: [
                 "name", 
+                "profile_image",
                 "contact_number",
                 "branch_id"
             ],
@@ -44,6 +45,7 @@ managerRoute.get('/', async (req, res, next) => {
             propertyManager.map(pm => ({
                 id: pm.id,
                 name: pm.name,
+                profile_image: pm.profile_image,
                 contact_number: pm.contact_number,
                 branch: branchId
             }))
