@@ -11,6 +11,35 @@ const branchRoute = express.Router();
 */
 
 
+branchRoute.get('/', async (req, res, next) => {
+    try {
+        const domain = [];
+
+        const branches = await searchRead({
+            model: "bedspacio.branch",
+            domain,
+            fields: [
+                "name", 
+                "address"
+            ],
+            limit: 20,
+            offset: Number(req.query.offset || 0),
+            order: "id asc"
+        });
+
+        res.json(
+            branches.map(branch => ({
+                id: branch.id,
+                name: branch.name,
+                address:branch.address
+            }))
+        )
+
+    } catch (err) {
+        next(err);
+    }
+})
+
 
 
 export default branchRoute;
