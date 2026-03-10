@@ -9,6 +9,7 @@ import odooRoute from './src/routes/odoo.routes.js'; // test to get user session
 import roomRoute from './src/routes/room.routes.js';
 import branchRoute from './src/routes/branch.routes.js';
 import managerRoute from './src/routes/manager.routes.js';
+import inclusionRoute from './src/routes/inclusion.routes.js';
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/odoo', odooRoute);
 app.use('/room', roomRoute);
 app.use('/branch', branchRoute);
 app.use('/manager', managerRoute);
+app.use('/inclusion', inclusionRoute);
 
 
 app.get('/', (req, res) => {

@@ -1,4 +1,3 @@
-"use client"
 
 import SearchFilter from '@/components/SearchFilter'
 import FrequentlyAskedQuestions from '@/components/FrequentlyAskedQuestion'
@@ -9,31 +8,13 @@ import Quote from '@/asset/icon/quote.svg'
 import Star from '@/asset/icon/star.svg'
 
 import Link from 'next/link'
-import { useSearchParams } from "next/navigation";
-import { useState, useMemo } from 'react'
+// import { useSearchParams } from "next/navigation";
+// import { useState, useMemo } from 'react'
+
+import BranchCard from '@/components/BranchCard'
+import RoomType from '@/components/RoomType'
 
 export default function Home() {
-    
-    const params = useSearchParams();
-    // const  [bedspace, setBedspace] = useState<string>('Bedspace')
-    // const  [aparment, setAparment] = useState<string>('Aparment')
-    const bedspace = "Bedspace";
-    const aparment = "Aparment"
-
-    
-    const roomTypeHREF = useMemo(() => {
-        const params = new URLSearchParams();
-
-        if (bedspace) params.set('room_type', bedspace)  
-        if (aparment) params.set('room_type', aparment)  
-
-        const parameters = params.toString();
-
-        return parameters && `/rentals?${parameters}`
-
-    }, [bedspace, aparment])
-
-
     return (
         <div className="flex flex-col min-h-screen items-start justify-start ">
             
@@ -71,49 +52,12 @@ export default function Home() {
             <section className='flex flex-col w-full min-h-[800px] bg-[#FAFAFA] items-center justify-start xl:px-[8rem] lg:px-[8rem] py-[3rem] gap-[3rem]'>
                 <div className='flex flex-col items-center justify-center gap-[2rem] w-full'>
                     <span className='text-[42px] font-[900] text-[#1D242B] leading-[0.5]'>Our Branches</span>
-
-                    <div className='flex flex-col xl:flex-row lg:flex-row md:flex-row items-center justify-center gap-[1rem] p-3 w-full'>
-                        <Link href={""} className='flex items-end justify-start w-full xl:w-[600px] lg:w-[600px] h-[200px] xl:h-[337.5px] lg:h-[337.5px] bg-[#C7EEFF] rounded-[10px] transition-transform duration-200 hover:-translate-y-1 active:translate-y-1'>
-                            <div className='flex items-center justify-between w-full gap-2 p-3 px-4 cursor-pointer transition-all duration-100'>
-                                <div className='flex flex-col items-start gap-1'>
-                                    <span className='font-bold text-[20px] leading-[1] text-[#0077C0]'>Branch Name</span>
-                                    <span className='text-[16px] leading-[1] text-[#0077C0]'>Branch Name</span>
-                                </div>
-                            </div>
-                        </Link>
-
-                        <Link href={""} className='flex items-end justify-start w-full xl:w-[600px] lg:w-[600px] h-[200px] xl:h-[337.5px] lg:h-[337.5px] bg-[#C7EEFF] rounded-[10px] transition-transform duration-200 hover:-translate-y-1 active:translate-y-1'>
-                            <div className='flex items-center justify-between w-full gap-2 p-3 px-4 cursor-pointer transition-all duration-100'>
-                                <div className='flex flex-col items-start gap-1'>
-                                    <span className='font-bold text-[20px] leading-[1] text-[#0077C0]'>Branch Name</span>
-                                    <span className='text-[16px] leading-[1] text-[#0077C0]'>Branch Name</span>
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
+                    <BranchCard />
                 </div>
 
                 <div className='flex flex-col items-center justify-center gap-[2rem] w-full'>
                     <span className='text-[42px] font-[900] text-[#1D242B] leading-[1] text-center'>Explore Room Types</span>
-
-                    <div className='flex flex-col xl:flex-row lg:flex-row md:flex-row items-center justify-center gap-[1rem] w-full p-3'>
-                        <div className='group relative flex items-center justify-center w-full xl:w-[600px] lg:w-[600px] h-[200px] xl:h-[337.5px] lg:h-[337.5px] bg-[#1D242B] rounded-[10px] overflow-hidden'>
-                            <img src="/asset/bedspace_example.jpg" alt="bedspace" className='absolute inset-0 w-full h-full object-cover opacity-75 group-hover:scale-105 transition-all duration-200'/>
-                            <Link href={roomTypeHREF} className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center gap-2 bg-[#FAFAFA] rounded-full p-2 px-4 hover:bg-[#C7EEFF] active:bg-[#0077C0] transition-all duration-100 border-2 border-[#1D242B]'>
-                                <span className='text-[#1D242B] text-[18px] font-bold'>{bedspace}</span>
-                                <ArrowRight className="w-[25px] h-auto stroke-[#1D242B]"/>
-                            </Link>
-
-                        </div>
-
-                        <div className='group relative flex items-center justify-center w-full xl:w-[600px] lg:w-[600px] h-[200px] xl:h-[337.5px] lg:h-[337.5px] bg-[#1D242B] rounded-[10px] overflow-hidden'>
-                            <img src="/asset/apartment_example.jpg" alt="bedspace" className='absolute inset-0 w-full h-full object-cover opacity-75 group-hover:scale-105 transition-all duration-200'/>
-                            <Link href={roomTypeHREF} className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center gap-2 bg-[#FAFAFA] rounded-full p-2 px-4 hover:bg-[#C7EEFF] active:bg-[#0077C0] transition-all duration-100 border-2 border-[#1D242B]'>
-                                <span className='text-[#1D242B] text-[18px] font-bold'>{aparment}</span>
-                                <ArrowRight className="w-[25px] h-auto stroke-[#1D242B]"/>
-                            </Link>
-                        </div>
-                    </div>
+                    <RoomType />
                 </div>
             </section>
 

@@ -20,6 +20,7 @@ branchRoute.get('/', async (req, res, next) => {
             domain,
             fields: [
                 "name", 
+                "branch_image",
                 "address"
             ],
             limit: 20,
@@ -31,6 +32,7 @@ branchRoute.get('/', async (req, res, next) => {
             branches.map(branch => ({
                 id: branch.id,
                 name: branch.name,
+                branch_image: branch.branch_image,
                 address:branch.address
             }))
         )
