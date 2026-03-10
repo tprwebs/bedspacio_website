@@ -6,6 +6,9 @@ import Arrow from '@/asset/icon/arrow-down.svg'
 import { BASE_URL } from "@/config/config";
 import axios from 'axios';
 
+import { getRoomListings, getInclusions } from "../../../../lib/room";
+import InclusionSelection from "./InclusionFilter";
+import { Inclusions } from "./InclusionFilter";
 
 
 // MAKE THIS an "async" function later when fetching data
@@ -44,19 +47,14 @@ export default async function Rentals({ searchParams }: { searchParams: Promise 
 }>
 }) {
 
-    const params = await searchParams;
 
-    const branch = params.branch;
-    const room_type = params.room_type;
-    const budget = params.budget;
+    // const response = await axios.get(`${BASE_URL}/room/listing`, { withCredentials: true })
+    const roomListings = await getRoomListings();
+    const rooms:ListingDetail[] = roomListings;
 
-    console.log(params);
+    const inclusionList = await getInclusions();
+    const inclusions: Inclusions[] = inclusionList;
 
-    const response = await axios.get(`${BASE_URL}/room/listing`, { withCredentials: true })
-    const rooms:ListingDetail[] = response.data;
-
-    console.log("Room listing result: ", rooms)
-    console.log("Room type: ", typeof rooms)
 
     return (
         <div className="flex flex-col items-center justify-start min-h-screen w-full">
@@ -66,16 +64,22 @@ export default async function Rentals({ searchParams }: { searchParams: Promise 
                 <div className="absolute flex flex-col w-full h-full items-center justify-center gap-[8rem] xl:gap-[2rem] lg:gap-[2rem] md:gap-[1rem] px-[1rem] xl:px-[8rem] lg:px-[8rem] md:px-[4rem]">
                     <span className="text-[32px] text-[#1D242B] font-[900] leading-[1]">Explore all [Number] of our listings</span>
                     <SearchFilter />
+                    <InclusionSelection  inclusionList={inclusions} />
                 </div>
+
             </section>
 
 
             <section className="flex flex-col items-start justify-start w-full h-auto px-[1rem] xl:px-[8rem] lg:px-[4rem]  py-[1rem]">
-                <div className="flex items-center justify-start py-[0.3rem] border-b border-b-[#0077C0]/50 w-full">
+                <div className="flex items-center justify-start py-[0.3rem] w-full border-b border-b-[#0077C0]/50">
                     <span className="text-[#1D242B] text-[24px] font-bold">Explore Listings</span>
                 </div>
+                {/* <div className="flex items-start justify-start gap-2 w-full py-[1rem] ">
+                    <InclusionSelection  inclusionList={inclusions} />
+                </div> */}
 
-                <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 w-full gap-[0.5rem] py-[2rem]">
+
+                <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 w-full gap-[0.5rem] pb-[2rem]">
                     {/* <Link href="/rentals/1" className="group flex flex-col items-center bg-[#FAFAFA] rounded-[10px] p-3 gap-2 border-1 border-[#1D242B]/25 cursor-pointer hover:border-[#1D242B] hover:-translate-y-1 transition-all duration-100">
                         <div className="relative flex items-center justify-center w-full h-[300px] bg-[#C7EEFF] rounded-[5px]">
                             <div className="absolute top-2 left-2 flex items-center px-2 py-1 rounded-[5px] bg-[#1D242B] gap-1">

@@ -6,11 +6,26 @@ const inclusionRoute = express.Router();
 
 inclusionRoute.get('/', async (req, res, next) => {
     try {
+        const inclusions = await searchRead({
+            model: "bedspacio.room.inclusion",
+            domain: [],
+            fields: [ "name" ],
+            limit: 20,
+            offset: 0,
+            order: "id asc"
+        });
 
+        res.json(inclusions.map(
+            inc => ({
+                id: inc.id,
+                name:inc.name
+            })
+        )) ?? [];
     } catch (err) {
         next(err);
     }
 });
+
 
 
 export default inclusionRoute;

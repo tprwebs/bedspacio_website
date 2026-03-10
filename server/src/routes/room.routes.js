@@ -211,4 +211,11 @@ roomRoute.get('/:id/images', async (req, res, next ) => {
 })
 
 
+
+
+
+// TODO: 
+// Create a filter to retrieve all room listing that includes the selected inclusion id
+
+
 export default roomRoute;
