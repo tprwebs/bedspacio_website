@@ -4,6 +4,7 @@ import Link from "next/link";
 import InquiryForm from "./InquiryForm";
 import ArrowLong from '@/asset/icon/arrow-long.svg'
 import Location from '@/asset/icon/map-pin.svg'
+import Map from "@/components/Map";
 
 import { getRoomDetails } from "../../../../../lib/room";
 import { ODOO_BASE_URL } from "@/config/config";
@@ -53,7 +54,7 @@ export default async function ListingInfoPage ({ params }: Props ) {
     */
 
     const room = await getRoomDetails(listing_id);
-
+    const encodedAddress = encodeURIComponent('Lot 1b blk 198 Lirio st pembo taguig city ');
     console.log('Room details from roomImages: ', room);
     
 
@@ -78,7 +79,7 @@ export default async function ListingInfoPage ({ params }: Props ) {
                             {/* <RoomImages images={room_images}/> */}
                             <RoomImages images={room.images}/>
                         </div>
-                        
+
                         <div className="flex flex-col items-start justify-start gap-[1rem] pb-[1rem] w-full">
                             <span className="text-[22px] xl:text-[24px] lg:text-[24px] text-[#1D242B] font-[900] leading-tight break-words w-full">{room.name}</span>
                             <div className="flex flex-col items-start gap-1">
@@ -199,7 +200,7 @@ export default async function ListingInfoPage ({ params }: Props ) {
                                     <span className="text-[20px] text-[#1D242B]">{room.branch.address}</span>
                                 </div>
                                 <div className="flex w-full aspect-[16/9] rounded-[10px] overflow-hidden border-2 border-[#1D242B]/50">
-                                    <iframe className="w-full h-full border-0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4314.530524048516!2d121.05546727557147!3d14.544422785935382!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c9166b115a33%3A0xfba6d8b32dd2f720!2sBedSpacio!5e1!3m2!1sen!2sph!4v1771987409424!5m2!1sen!2sph"  loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+                                    <Map address={room.branch.address} />
                                 </div>
                             </div>
                         </div>

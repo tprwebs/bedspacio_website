@@ -57,7 +57,7 @@ export default function InclusionSelection ({ inclusionList }: InclusionProps ) 
             ))}
             {incList.length > 0 && (
                 <button onClick={handleInclusionFilterReset}
-                className="flex items-center gap-1 rounded-full font-bold text-[#1D242B] bg-[#1D242B] text-[#FAFAFA] font-bold px-4 py-2 cursor-pointer active:bg-[#1D242B]/25">
+                className="flex items-center gap-1 rounded-full font-bold text-[#1D242B] bg-[#1D242B] text-[#FAFAFA] font-bold px-3 py-1 cursor-pointer active:bg-[#1D242B]/25 border-2 border-[#1D242B]">
                     <Closefrom className="w-[20px] h-[20px]" />
                     clear filter
                 </button>
