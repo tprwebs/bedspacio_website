@@ -29,8 +29,8 @@ export default function BranchSelection ({ branchData, selectedBranch, setSelect
             <button onClick={() => setOpenBranch(prev => !prev)} className={`flex items-center justify-between text-[18px] font-bold cursor-pointer hover:bg-[#C7EEFF] active:bg-[#C7EEFF] h-[50px] px-3 rounded-[5px] w-full bg-[#FAFAFA]`}>
                 <span className='text-left whitespace-nowrap w-[225px] truncate'>
                     {!selectedBranch
-                        ? 'Choose a branch'
-                        : selectedBranchName || 'Choose a branch'}
+                        ? 'All'
+                        : selectedBranchName || 'All'}
                 </span>
                 <ArrowDown className={`${openBranch && 'rotate-180'} w-[30px] h-auto transition-all duration-100`} />
             </button>

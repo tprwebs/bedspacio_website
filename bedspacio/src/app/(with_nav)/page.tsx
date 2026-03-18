@@ -35,8 +35,9 @@ export default function Home() {
 
                         <SearchFilter/>
                     </div> */}
-
-                    <SearchFilter />
+                    <div className='flex items-center justify-center bg-[#1D242B]/25 rounded-[5px] border border-[#FAFAFA]'>
+                        <SearchFilter />
+                    </div>
 
                 </div>
             </section>
