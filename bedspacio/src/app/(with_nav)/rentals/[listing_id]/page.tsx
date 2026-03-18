@@ -5,6 +5,7 @@ import InquiryForm from "./InquiryForm";
 import ArrowLong from '@/asset/icon/arrow-long.svg'
 import Location from '@/asset/icon/map-pin.svg'
 import Map from "@/components/Map";
+import Breadcrumbs from "@/components/BreadCrumb";
 
 import { getRoomDetails } from "../../../../../lib/room";
 import { ODOO_BASE_URL } from "@/config/config";
@@ -54,22 +55,19 @@ export default async function ListingInfoPage ({ params }: Props ) {
     */
 
     const room = await getRoomDetails(listing_id);
-    const encodedAddress = encodeURIComponent('Lot 1b blk 198 Lirio st pembo taguig city ');
     console.log('Room details from roomImages: ', room);
     
 
     return (
         <div className="flex flex-col items-start w-full min-h-screen">
-            <div className="flex items-center w-full px-[1rem] xl:px-[8rem] lg:px-[6rem] py-[1rem]">
-                <span>{`Rentals > Listings >`}</span>
+            <div className="flex items-center w-full px-[1rem] xl:px-[8rem] lg:px-[6rem] py-[1rem] ">
+                <Breadcrumbs />
             </div>
 
-            <section className="flex flex-col items-start justify-start w-full h-full px-[1rem] xl:px-[8rem] lg:px-[2rem] gap-[2rem] box-border">
-                
-
-                <div className="relative flex flex-col xl:grid lg:grid md:flex xl:grid-cols-[60%_40%] lg:grid-cols-[60%_40%] md:flex-col pb-[4rem] box-border gap-[2rem] overflow-wrap">
-                    <div className="flex flex-col items-start justify-start w-full h-full gap-[1rem]">
-                        <div className="relative flex w-full h-full gap-[1rem] rounded-[10px]">
+            <section className="flex flex-col items-start justify-start w-full h-full px-[1rem] xl:px-[8rem] lg:px-[2rem]  box-border">
+                <div className="relative flex flex-col xl:grid lg:grid md:flex xl:grid-cols-[60%_40%] lg:grid-cols-[60%_40%] md:flex-col pb-[4rem] box-border gap-[2rem] xl:gap-0 lg:gap-0 overflow-wrap w-full">
+                    <div className="flex flex-col items-start justify-start w-full h-full gap-[1rem] pr-2">
+                        <div className="relative flex w-full h-full rounded-[10px]">
                             <div className="absolute top-3 left-3 z-10 rounded-[10px] p-2 flex items-center gap-2 bg-[#0077C0]">
                                 <span className="text-[#FAFAFA] text-[16px]">{room.type !== 'bedspace' ? 'Apartment' : 'Bedspace'}</span>
                                 <span className="text-[#FAFAFA] text-[16px]">|</span>
@@ -88,48 +86,6 @@ export default async function ListingInfoPage ({ params }: Props ) {
                                     <span className="text-[#0077C0] text-[28px] font-bold leading-[0.75] opacity-50">/monthly</span>
                                 </div>
                             </div>
-
-                            {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 w-full">
-                                <div className="flex  items-center justify-start bg-[#1D242B]/10 pl-4 p-2 gap-2 overflow-hidden">
-                                    <span className="text-center text-[16px] font-medium text-[#1D242B] min-w-[100px] max-w-[140px] truncate">
-                                    Maximum Pax:
-                                    </span>
-                                    <span className="font-bold text-[16px] text-[#0077C0] whitespace-nowrap">
-                                    {room.maximum_pax}
-                                    </span>
-                                </div>
-
-                                <div className="flex  items-center justify-start bg-[#1D242B]/10 pl-4 p-2 gap-2  overflow-hidden">
-                                    <span className="text-center text-[16px] font-medium text-[#1D242B] min-w-[100px] max-w-[140px] truncate">
-                                    Available Slot:
-                                    </span>
-                                    <span className="font-bold text-[16px] text-[#0077C0] whitespace-nowrap">
-                                    {room.available_slot}
-                                    </span>
-                                </div>
-
-                                {room.type === 'bedspace' && (
-                                    <div className="flex  items-center justify-start bg-[#1D242B]/10 pl-4 p-2 gap-2 overflow-hidden">
-                                        <span className="text-center text-[16px] font-medium text-[#1D242B] min-w-[100px] max-w-[140px] truncate">
-                                            Upper Decks:
-                                        </span>
-                                        <span className="font-bold text-[16px] text-[#0077C0] whitespace-nowrap">
-                                            {room.available_upper}
-                                        </span>
-                                    </div>
-                                )}
-
-                                {room.type === 'bedspace' && (
-                                    <div className="flex items-center justify-start bg-[#1D242B]/10 pl-4 p-2 gap-2 overflow-hidden">
-                                        <span className="text-center text-[16px] font-medium text-[#1D242B] min-w-[100px] max-w-[140px] truncate">
-                                            Lower Decks:
-                                        </span>
-                                        <span className="font-bold text-[16px] text-[#0077C0] whitespace-nowrap">
-                                            {room.available_lower}
-                                        </span>
-                                    </div>
-                                )}
-                                </div> */}
                         </div>
 
                         <div className="flex flex-col items-start gap-[1rem] w-full pt-[1rem] border-t border-t-[#1D242B]/50">
@@ -224,8 +180,10 @@ export default async function ListingInfoPage ({ params }: Props ) {
                         propertyManager={room.property_manager}
                         propertyManagerContact={room.property_manager_contact}
                         profileImage={room.profile_image}
+                        publicRoomId={room.public_room_id}
+                        startingPrice={room.starting_price}
                     />
-            </div>
+                </div>
             </section>
         </div>
     )

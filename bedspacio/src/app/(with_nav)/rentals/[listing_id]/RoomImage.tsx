@@ -54,8 +54,9 @@ export default function RoomImages ({ images }: RoomImageProp) {
                     <button onClick={() => setFullViewOpen(prev => !prev)} title='Full Screen' className='hidden xl:flex lg:flex absolute bottom-2 right-2 cursor-pointer'>
                         <FullScreen className="w-[20px] h-[20px] hover:scale-110 active:scale-100 transition-all duration-100"/>
                     </button>
+
                     {images.length > 1 && (
-                        <div className="xl:hidden lg:hidden absolute inset-0 flex items-center justify-between w-full h-full px-2">
+                        <div className="xl:hidden lg:hidden absolute  flex items-center justify-between w-full h-full px-2">
                             <button onClick={toggleImageLeft}  className="bg-[#FAFAFA] rounded-full cursor-pointer active:bg-[#0077C0] active:scale-95 transition-all duration-100">
                                 <Arrow className="w-[40px] h-[40px] -rotate-180" />
                             </button>

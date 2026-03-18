@@ -1,5 +1,5 @@
 import express from 'express';
-import { searchRead, readByIds, executeKw } from '../odoo/odoo.service.js';
+import { searchRead, readByIds, executeKw, createRecord } from '../odoo/odoo.service.js';
 
 const roomRoute = express.Router();
 
@@ -45,7 +45,9 @@ roomRoute.get('/v1/listing' , async (req, res) => {
         const totalItems = await executeKw({
             model: "bedspacio.room",
             method: "search_count",
-            args: [domain]
+            kwargs: {
+                domain
+            }
         });
 
         const totalPages = Math.ceil(totalItems / pageSize)
@@ -143,6 +145,7 @@ roomRoute.get('/v1/detail/:id', async (req, res, next) => {
             model: "bedspacio.room",
             domain: [["id", "=", room_id]],
             fields: [
+                "public_room_id",
                 "room_name",
                 "room_type",
                 "description",
@@ -226,6 +229,7 @@ roomRoute.get('/v1/detail/:id', async (req, res, next) => {
 
         res.json({
                 id:room_id,
+                public_room_id: data.public_room_id,
                 name: data.room_name,
                 type: data.room_type,
                 description: data.description,
@@ -265,6 +269,70 @@ roomRoute.get('/v1/detail/:id', async (req, res, next) => {
 })
 
 
+
+/*
+    1. Creates an record of type="opportunity" in ODOO
+    2. Inquiry comming from /rentals/[listing_id]
+*/
+
+// roomRoute.post('/v1/lead-record', async (req, res, next) => {
+//     try {
+//         const {
+//             public_room_id,
+//             starting_price,
+//             fullname,
+//             contactNumber,
+//             email,
+//             schedule,
+//             targetMoveIn,
+//             monthsOfStay,
+//             other
+//         } = req.body;
+
+
+//         const result = await createRecord({
+//             model: "crm.lead",
+//             values: {
+//                 name: `Inquiry - ${fullname} (${public_room_id})`,
+//                 type: "opportunity",
+//                 contact_name: fullname,
+//                 // public_room_id: public_room_id,
+//                 email_from: email,
+//                 phone: contactNumber,
+//                 date_deadline: targetMoveIn,
+//                 expected_revenue: `${monthsOfStay * starting_price}`,
+//                 description: `
+//                     <strong>Work Schedule: </strong> ${schedule}, <br/>
+//                     <strong>Target Move-In: </strong> ${targetMoveIn}, <br/>
+//                     <strong>Month/s of Stay: </strong> ${monthsOfStay}, <br/>
+//                     <strong>Other: </strong> ${other}
+//                 `
+//             }
+//         })
+
+//         const new_id = Array.isArray(result) && result.length > 0 ? result[0] : null;
+//         console.log('NEW ID from createrecord: ', new_id);
+
+//         if (!result) {
+//             console.log("Post request result: ", result);
+//         }
+
+//         return res.json({
+//             suscess: true,
+//             data: result,
+//             message: 'Inquiry submitted sucessfully!'
+//         });
+        
+//     } catch (err) {
+//         next(err);
+
+//         console.error('Error creating lead record: ', err);
+//         return res.status(500).json({
+//             success:false,
+//             message: "Error creating Lead Record!"
+//         })
+//     }
+// })
 
 
 

@@ -6,6 +6,8 @@ import ListingCard, { ListingDetail } from "./ListingCard"
 import { getRoomListings, getInclusions } from "../../../../lib/room";
 import InclusionSelection from "./InclusionFilter";
 import Pagination from "./Pagination";
+import Breadcrumbs from "@/components/BreadCrumb"
+
 
 
 // MAKE THIS an "async" function later when fetching data
@@ -92,22 +94,31 @@ export default async function Rentals({ searchParams }: { searchParams: Promise 
     
     query.set("page", String(page));
 
+    console.log('[/rentals] Pagination detail: ', roomListings.pagination)
 
     return (
-        <div className="flex flex-col items-center justify-start min-h-screen w-full bg-[#FAFAFA]">
-            <section className="relative flex flex-col items-center justify-center w-full h-screen xl:h-[400px] lg:h-[400px] md:h-screen bg-[#C7EEFF]">
-                <img src="/asset/rentas_bg_image.jpg" alt="rentals-header-image"  className="absolute inset-0 w-full h-full object-cover opacity-50"/>
+        <div className="flex flex-col items-center justify-start min-h-screen w-full bg-[#FAFAFA] px-0 xl:px-[8rem] lg:px-[4rem]">
 
-                <div className="flex flex-col items-center justify-center gap-[2rem] w-full px-[1rem] xl:px-[8rem] lg:px-[8rem] md:px-[2rem]">
-                    <SearchFilter />
-                    {/* <InclusionSelection  inclusionList={inclusionList} /> */}
-                </div>
+            <div className="hidden xl:flex lg:flex items-center justify-start w-full py-[1rem]">
+                <Breadcrumbs />
+            </div>
+
+            <section className="relative flex flex-col items-center justify-center w-full h-auto bg-[#1D242B] py-[2rem] px-[1rem] xl:px-0 lg:px-0 md:px-0 rounded-0 xl:rounded-[5px] lg:rounded-[5px]">
+                <span className="text-[#0077C0] text-[32px] font-bold">Customise Filter</span>
+                <img src="/asset/rentas_bg_image.jpg" alt="rentals-header-image"  className="absolute inset-0 w-full h-full object-cover opacity-25"/>
+
+                <SearchFilter />    
             </section>
 
 
-            <section className="flex flex-col items-start justify-start w-full h-auto p-[1rem] xl:px-[8rem] lg:px-[4rem]">
+            <section className="flex flex-col items-start justify-start w-full h-auto py-[1rem] px-[1rem] xl:px-0 lg:px-0">
                 <div className="flex flex-col xl:flex-row lg:flex-row items-start justify-between py-[0.5rem] gap-2 w-full border-b border-b-[#0077C0]/50">
-                    <span className="text-[#1D242B] text-[24px] font-bold whitespace-nowrap">Explore Listings</span>
+                    <div className="flex items-center gap-2">
+                        <span className="text-[#1D242B] text-[24px] font-bold whitespace-nowrap">Explore Listings</span>
+                        <div className="flex items-center justify-center leading-0 font-bold size-8 rounded-full bg-[#0077C0] text-[#FAFAFA]">
+                            {roomListings.pagination.totalItems}
+                        </div>
+                    </div>
                     <InclusionSelection  inclusionList={inclusionList} />
                 </div>
 

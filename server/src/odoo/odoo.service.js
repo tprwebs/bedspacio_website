@@ -1,5 +1,7 @@
 import { getOdooClient } from "./session.js";
 
+const USER_API_KEY = process.env.USER_API_KEY;
+
 export async function searchRead({
     model,
     domain = [],
@@ -10,70 +12,88 @@ export async function searchRead({
 }) {
     const odoo = await getOdooClient();
 
-    const response = await odoo.call("/web/dataset/call_kw", {
-        jsonrpc: "2.0",
-        method: "call",
-        params: {
-            model,
-            method: "search_read",
-            args: [domain],
-            kwargs: { fields, limit, offset, order },
-        },
-        id: Date.now(),
-    });
+    const payload = {
+        domain,
+        fields,
+        limit,
+        offset
+    }
 
-    if (response.data?.error) throw new Error(JSON.stringify(response.data.error));
-    return response.data.result;
+    if (order) payload.order = order;
+
+    const response = await odoo.call(`/json/2/${model}/search_read`, payload);
+
+
+    console.log('SearchRead Response: ', response.data)
+    return response.data;
 }
 
 
 
-export async function readByIds({ model, ids, fields = [] }) {
+export async function readByIds({ 
+    model, 
+    ids, 
+    fields = [] 
+}) {
     const odoo = await getOdooClient();
-    const response = await odoo.call("/web/dataset/call_kw", {
-        jsonrpc: "2.0",
-        method: "call", 
-        params: {
-            model,
-            method: "read",
-            args: [ids, fields],
-            kwargs: {},
-        },
-        id: Date.now(),
+
+    const response = await odoo.call(`/json/2/${model}/read`, {
+        ids, 
+        fields
     });
 
     if (response.data?.error) throw new Error(JSON.stringify(response.data.error));
-
-    return response.data.result;
+    return response.data;
 }
+
+
 
 
 
 export async function executeKw({
     model, 
     method,
-    args = [],
     kwargs = {}
 }) {
     const odoo = await getOdooClient();
 
-    const response = await odoo.call("/web/dataset/call_kw", {
-        jsonrpc: "2.0",
-        method: "call",
-        params: {
-            model,
-            method, 
-            args,
-            kwargs,
-        },
-        id: Date.now(),
-    });
+
+    const response = await odoo.call(`/json/2/${model}/${method}`, { ...kwargs });
+
+    if (response?.data?.error) {
+        throw new Error(JSON.stringify(response.data.error))
+    };
 
     console.log("executeKw response:", response.data);
 
-    if (response?.data?.error) {
-        throw new Error(JSON.stringify(response.data.error));
+    return response.data;
+};
+
+
+
+// Create a lead for Inquiry (first activity)
+// CRM
+
+export async function createRecord({
+    model,
+    values,
+}) {
+    try {
+        const odoo = await getOdooClient();
+
+        const path = `/json/2/${model}/create`;
+        const body = { 
+            vals_list: values
+        };
+
+        const result = await odoo.call(path, body);
+
+
+        console.log('Create Record: ', result);
+
+        return result.data;
+
+    } catch (err) {
+        console.error('Create Record failed: ', err);
     }
-    
-    return response?.data?.result;
 };

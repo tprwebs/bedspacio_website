@@ -12,7 +12,10 @@ type RoomTypeProps = {
 
 export default function RoomTypeSelection ({ selectedRoomType, setSelectedRoomType }: RoomTypeProps ) {
     const [openRoomType, setOpenRoomType] = useState<Boolean>(false);
-    const room_type = [ 'bedspace', 'apartment' ]
+    const roomTypes = [
+        { value: "bedspace", label: "Bedspace" },
+        { value: "apartment", label: "Apartment" },
+    ]
 
     return (
         <div className='relative flex flex-col items-start justify-between w-full h-full xl:w-[300px] lg:w-[200px]'>
@@ -25,10 +28,11 @@ export default function RoomTypeSelection ({ selectedRoomType, setSelectedRoomTy
             {openRoomType && (
                 <div className='absolute top-21 z-10 flex flex-col items-start justify-start bg-[#FAFAFA] w-full rounded-[5px] overflow-hidden'>
                         <div className='flex flex-col w-full'>
-                            {room_type.map((type, index) => (
-                                <span key={index} onClick={() => {setSelectedRoomType(type); setOpenRoomType(false) }} className='p-3 text-[#0077C0] text-[16px] font-bold cursor-pointer hover:bg-[#C7EEFF] active:bg-[#C7EEFF] w-full'>{type === 'bedspace' ? 'Bedspace' : 'Apartment'}</span>
+                            {roomTypes.map((type, index) => (
+                                <span key={index} onClick={() => {setSelectedRoomType(type.value); setOpenRoomType(false) }} className='p-3 text-[#0077C0] text-[16px] font-bold cursor-pointer hover:bg-[#C7EEFF] active:bg-[#C7EEFF] w-full'>{type.label}</span>
                             ))}
-                                <span onClick={() => {setSelectedRoomType('All'); setOpenRoomType(false) }} className='p-3 text-[#0077C0] text-[16px] font-bold cursor-pointer hover:bg-[#C7EEFF] active:bg-[#C7EEFF] w-full'>All</span>
+
+                            <span onClick={() => {setSelectedRoomType('All'); setOpenRoomType(false) }} className='p-3 text-[#0077C0] text-[16px] font-bold cursor-pointer hover:bg-[#C7EEFF] active:bg-[#C7EEFF] w-full'>{'All'}</span>
                         </div>
                 </div>
             )}

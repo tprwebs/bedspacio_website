@@ -30,11 +30,33 @@ export default function SearchFilterClient ({ branchData }: BranchProp) {
     const [minBudget, setMinBudget] = useState(searchParams.get("minimumBudget") || "")
     const [maxBudget, setMaxBudget] = useState(searchParams.get("maximumBudget") || "")
 
+
+    
+
     const handleSearch = () => {
         const params = new URLSearchParams(searchParams.toString())
+        const selectedBranchObj = branchData.find(
+            b => b.id.toString() === selectedBranch
+            );
 
-        if (selectedBranch) params.set("branch", selectedBranch)
-        if (selectedRoomType) params.set("room_type", selectedRoomType)
+        const slug = selectedBranchObj?.name
+            ?.toLowerCase()
+            .replace(/[^\w\s-]/g, "")
+            .replace(/\s+/g, "-");
+
+        if (selectedBranch && selectedBranch !== "All") {
+            params.set("branch", selectedBranch); // ID
+            if (slug) params.set("branchName", slug); // NAME
+        } else {
+            params.delete("branch");
+            params.delete("branchName");
+        }
+
+        if (selectedRoomType && selectedRoomType !== "All") {
+            params.set("room_type", selectedRoomType);
+        } else {
+            params.delete("room_type");
+        }
         if (minBudget) params.set("minimumBudget", minBudget);
         if (maxBudget) params.set("maximumBudget", maxBudget)
 
@@ -47,8 +69,8 @@ export default function SearchFilterClient ({ branchData }: BranchProp) {
     const handleFitlerReset = () => {
         const params = new URLSearchParams(searchParams.toString())
 
-        setSelectedBranch("");
-        setSelectedRoomType("");
+        setSelectedBranch("All");
+        setSelectedRoomType("All");
         setMinBudget("");
         setMaxBudget("");
 
@@ -61,8 +83,8 @@ export default function SearchFilterClient ({ branchData }: BranchProp) {
     }
 
     const hasAnyFilter =
-        selectedBranch !== "" ||
-        selectedRoomType !== "" ||
+        selectedBranch !== "All" ||
+        selectedRoomType !== "All" ||
         minBudget !== "" ||
         maxBudget !== "";
 
@@ -85,21 +107,25 @@ export default function SearchFilterClient ({ branchData }: BranchProp) {
                 setMaxBudget={setMaxBudget}
             />
 
-
-            <button
-                type="button"
-                onClick={handleSearch}
-                className="flex items-center gap-2 w-full xl:w-auto lg:w-auto rounded-[5px] bg-[#0077C0] cursor-pointer hover:bg-[#0077C0]/50 active:bg-[#0077C0] xl:active:bg-[#0077C0] lg:active:bg-[#0077C0] text-[#FAFAFA] h-[50px] px-3 py-4 font-bold transition-all duration-100"
-                >
-                    <Search className="stroke-[#FAFAFA] h-[20px] w-[20px] fill-[#FAFAFA]" />
-                    <span className="text-[18px] whitespace-nowrap">Find a Room</span>
-            </button>
-            {hasAnyFilter && (
-                <button onClick={handleFitlerReset} className="flex items-center gap-2 w-full xl:w-auto lg:w-auto rounded-[5px] bg-[#1D242B] cursor-pointer hover:bg-[#0077C0] active:bg-[#0077C0] xl:active:bg-[#1D242B] lg:active:bg-[#1D242B] text-[#FAFAFA] h-[50px] px-3 py-4 font-bold transition-all duration-100">
-                    <Clear className="w-[20px] h-[20px]" />
-                    Clear
+            <div className="flex flex-col xl:flex-row lg:flex-row gap-1 w-full xl:w-auto lg:w-auto ">
+                <button
+                    type="button"
+                    onClick={handleSearch}
+                    className="flex items-center gap-2 w-full rounded-[5px] bg-[#0077C0] cursor-pointer hover:bg-[#0077C0]/50 active:bg-[#0077C0] xl:active:bg-[#0077C0] lg:active:bg-[#0077C0] text-[#FAFAFA] h-[50px] px-3 py-4 font-bold transition-all duration-100"
+                    >
+                        <Search className="stroke-[#FAFAFA] h-[20px] w-[20px] fill-[#FAFAFA]" />
+                        <span className="text-[18px] whitespace-nowrap">Find a Room</span>
                 </button>
-            )}
+
+                {hasAnyFilter && (
+                    <button onClick={handleFitlerReset} className="flex items-center gap-2 w-full rounded-[5px] bg-[#1D242B] cursor-pointer hover:bg-[#141414] active:bg-[#1D242B] xl:active:bg-[#1D242B] lg:active:bg-[#1D242B] text-[#FAFAFA] h-[50px] px-3 py-4 font-bold transition-all duration-100">
+                        <Clear className="w-[20px] h-[20px]" />
+                        Clear
+                    </button>
+                )}
+            </div>
+
+
         </div>
     )
 }

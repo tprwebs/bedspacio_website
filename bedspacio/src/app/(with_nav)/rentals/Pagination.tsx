@@ -34,6 +34,10 @@ export default function Pagination ({ pageDetails, currentPage }: PageProp) {
     const prevPage = Math.max(1, currentPage - 1);
     const nextPage = Math.min(pageDetails.totalPages, currentPage + 1);
 
+    if (pageDetails.totalItems <= 0) {
+        return null;
+    }
+
     return (
         <div className="flex items-center justify-center w-full px-[1rem] py-[2rem] gap-[1rem]">
             <Link href={createPageURL(prevPage)} 

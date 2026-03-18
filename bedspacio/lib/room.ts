@@ -2,6 +2,7 @@ import { cache } from "react"
 import axios from 'axios'
 import { BASE_URL } from "@/config/config";
 import { RoomImage } from "@/app/(with_nav)/rentals/[listing_id]/RoomImage";
+import { InquiryFormValues } from "@/app/(with_nav)/rentals/[listing_id]/InquiryFormClient";
 
 type RoomListingParams = {
     page?: number,
@@ -65,3 +66,17 @@ export const getInclusions = cache(async () => {
         return [];
     }
 })
+
+
+// export const setLeadRecord = async (formData: InquiryFormValues) => {
+//     try {
+//         const response = await axios.post(`${BASE_URL}/room/v1/lead-record`, formData, {
+//             withCredentials: true
+//         })
+
+//         console.log('[setLeadRecord] Created Record: ', response.data);
+//         return response.data;
+//     } catch (err) {
+//         console.log('Error create new lead record: ', err);
+//     }
+// }

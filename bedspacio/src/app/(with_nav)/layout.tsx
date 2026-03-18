@@ -31,7 +31,6 @@ export default function WithNavigation({ children }: { children: React.ReactNode
             <div className={`fixed inset-y-0 flex items-end justify-end w-full min-h-screen xl:hidden lg:hidden z-40 transition-transform duration-200 ease-out ${toggleNav ? 'translate-x-0' : 'translate-x-full'}`}>
                 <NavigationMobile toggleNavigation={() => setToggleNav(prev => !prev)}/>
             </div>
-            
             <main>{children}</main>
             <Footer />
         </div>
