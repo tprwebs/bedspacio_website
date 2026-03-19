@@ -21,7 +21,7 @@ export default function RoomTypeSelection ({ selectedRoomType, setSelectedRoomTy
         <div className='relative flex flex-col items-start justify-between w-full h-full xl:w-[300px] lg:w-[200px]'>
             <span className={`text-[#FAFAFA] text-[16px] font-bold pb-1 pl-2`}>Room Type</span>
             <button onClick={() => setOpenRoomType(prev => !prev)} className={`flex items-center justify-between text-[18px] font-bold cursor-pointer  hover:bg-[#C7EEFF] active:bg-[#C7EEFF] rounded-[5px] h-[50px] px-3 w-full bg-[#FAFAFA]`}>
-                <span className="text-left whitespace-nowrap w-[225px] truncate">{!selectedRoomType ? 'All' : selectedRoomType}</span>
+                <span className="text-left whitespace-nowrap w-[225px] truncate">{(!selectedRoomType ? 'All' : selectedRoomType).charAt(0).toUpperCase() + (!selectedRoomType ? 'All' : selectedRoomType).slice(1)}</span>
                 <ArrowDown className={`${openRoomType && 'rotate-180'} w-[30px] h-auto transition-all duration-100`} />
             </button>
 

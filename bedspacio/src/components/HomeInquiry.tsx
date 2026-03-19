@@ -1,8 +1,9 @@
 "use client"
 
 import { useForm } from "react-hook-form"
+import { useState } from "react";
 
-type InquiryValues = {
+export type InquiryValues = {
     fullname: string,
     contactNumber: string,
     email: string,
@@ -10,17 +11,16 @@ type InquiryValues = {
     message: string
 }
 
+
 export default function HomeInquiry() {
 
     const { register, handleSubmit, reset, formState: { errors, isSubmitSuccessful } } = useForm<InquiryValues>(); 
-
+    
     const onSubmit = (data: InquiryValues) => {
         // Send the data using the payload from InquiryValues to backend
         console.log("Payload: ", data)
-
         reset();
     }
-
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center justify-center w-full h-auto bg-[#FAFAFA] py-[4rem] px-[1rem] xl:px-[8rem] lg:px-[8rem] md:px-[4rem] gap-[1rem] border-dashed border-t-2 border-t-[#1D242B]/50">
@@ -100,7 +100,7 @@ export default function HomeInquiry() {
                 </div>
             ) : (
                 <div className="flex w-[500px] p-[2rem] border-dashed border-2 border-[#0077C0] rounded-[10px] bg-[#C7EEFF]">
-                    <span className="text-[18px] text-[#0077C0] text-center leading-[1.2] font-bold">Thanks! Your inquiry was sent successfully. We've emailed you a confirmation and will be in touch soon.</span>
+                    <span className="text-[18px] text-[#0077C0] text-center leading-[1.2] font-bold">Thank You! Your inquiry was submitted successfully. We've emailed you a confirmation and will be in with you touch soon.</span>
                 </div>
             )}
 
