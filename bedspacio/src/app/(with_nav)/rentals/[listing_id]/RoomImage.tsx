@@ -3,7 +3,10 @@
 import { useState } from 'react'
 import Arrow from '@/asset/icon/arrow-right.svg'
 import FullScreen from '@/asset/icon/full-screen.svg'
+
+// Prod/Dev
 import { ODOO_BASE_URL } from '@/config/config'
+
 
 import ImageFullView from './ImageFullView'
 

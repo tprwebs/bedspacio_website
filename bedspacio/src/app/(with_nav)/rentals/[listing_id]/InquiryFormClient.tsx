@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import SubmitInquiry from './SubmitInquiry';
+import { ODOO_BASE_URL } from '@/config/config';
 
 export type InquiryFormValues = {
     public_room_id: string,
@@ -253,7 +254,9 @@ export default function InquiryFormClient ({
                     <span className='text-[16px] font-bold'>Give a quick call to the assigned Property Manager of this listing</span>
                     <div className='flex flex-col items-center justify-center w-full rounded-[10px] p-4 bg-[#FAFAFA] gap-4'>
                         <div className='max-w-[150px] max-h-[150px] bg-[#C7EEFF] rounded-full overflow-hidden'>
-                            <img src={`data:image/webp;base64,${profileImage}`} alt="property-manager" className='w-full h-full bg-cover' />
+                            {/* <img src={`data:image/webp;base64,${profileImage}`} alt="property-manager" className='w-full h-full bg-cover' /> */}
+
+                            <img src={`${ODOO_BASE_URL}/${profileImage}`} alt="property-manager" className='w-full h-full bg-cover' />
                         </div>
 
                         <div className='flex flex-col items-center justify-center gap-2 w-full'>

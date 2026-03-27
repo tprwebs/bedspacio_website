@@ -8,6 +8,8 @@ import axios from "axios"
 export default async function SubmitInquiry (data: InquiryFormValues) {
 
     try {
+        
+
         const response = await axios.post(
             `${BASE_URL}/room/v1/inquiry-record`, 
             {

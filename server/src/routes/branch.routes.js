@@ -32,7 +32,7 @@ branchRoute.get('/v1', async (req, res, next) => {
             branches.map(branch => ({
                 id: branch.id,
                 name: branch.branch_name,
-                branch_image: branch.branch_image,
+                branch_image: `/web/image/bedspacio.branch/${branch.id}/branch_image`,
                 address:branch.address
             }))
         )

@@ -157,6 +157,7 @@ roomRoute.get('/v1/detail/:id', async (req, res, next) => {
                 "available_upper",
                 "available_lower",
                 "branch_id",
+                "property_manager_id",
                 "property_manager_name",
                 "property_contact",
                 "profile_image",
@@ -248,9 +249,10 @@ roomRoute.get('/v1/detail/:id', async (req, res, next) => {
                         landmarks: landmarks
                     }
                     : null,
+                // property_manager_id: data.property_manager_id?.[0],
                 property_manager: data.property_manager_name,
                 property_manager_contact: data.property_contact,
-                profile_image: data.profile_image,
+                profile_image: `/web/image/bedspacio.property.manager/${data.property_manager_id[0]}/profile_image`,
                 inclusions: inclusions,
                 payment_terms: paymentTerms,
                 images: images.map(img => ({
@@ -278,6 +280,13 @@ roomRoute.get('/v1/detail/:id', async (req, res, next) => {
 
 roomRoute.post('/v1/inquiry-record', async (req, res, next) => {
     try {
+        // const ip =
+        //     req.headers['X-Forwarded-For']?.split(',')[0] ||
+        //     req.socket?.remoteAddress ||
+        //     req.ip;
+
+        // console.log('User IP:', ip);
+
         const {
             public_room_id,
             starting_price,
@@ -298,11 +307,12 @@ roomRoute.post('/v1/inquiry-record', async (req, res, next) => {
                 starting_price: Number(starting_price),
                 full_name: fullname,
                 contact_number: contactNumber,
-                email,
+                email: email,
                 work_schedule: schedule,
                 target_move_in: new Date(targetMoveIn).toISOString().split('T')[0],
                 months_of_stay: Number(monthsOfStay),
                 others: other,
+                // ip_address: ip
             }
         })
 

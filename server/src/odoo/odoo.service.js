@@ -84,7 +84,7 @@ export async function createInquiryRecord({
         const path = `/json/2/${model}/create`;
         const body = {
             vals_list: [
-                { values }
+                values 
             ]
         }
 
