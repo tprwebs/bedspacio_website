@@ -278,15 +278,8 @@ roomRoute.get('/v1/detail/:id', async (req, res, next) => {
     2. Inquiry comming from /rentals/[listing_id]
 */
 
-roomRoute.post('/v1/inquiry-record', async (req, res, next) => {
+roomRoute.post('/v1/:public_room_id/inquiries', async (req, res, next) => {
     try {
-        // const ip =
-        //     req.headers['X-Forwarded-For']?.split(',')[0] ||
-        //     req.socket?.remoteAddress ||
-        //     req.ip;
-
-        // console.log('User IP:', ip);
-
         const {
             public_room_id,
             starting_price,

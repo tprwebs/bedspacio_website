@@ -11,7 +11,7 @@ export default async function SubmitInquiry (data: InquiryFormValues) {
         
 
         const response = await axios.post(
-            `${BASE_URL}/room/v1/inquiry-record`, 
+            `${BASE_URL}/room/v1/${data.public_room_id}/inquiries`, 
             {
                 public_room_id: data.public_room_id,
                 starting_price: data.starting_price,
