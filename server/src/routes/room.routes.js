@@ -160,7 +160,7 @@ roomRoute.get('/v1/detail/:id', async (req, res, next) => {
                 "property_manager_id",
                 "property_manager_name",
                 "property_contact",
-                "profile_image",
+                // "profile_image", commented, using filestore now instead of base64
                 "inclusion_ids",
                 "payment_term_ids",
                 "image_ids"
@@ -283,12 +283,12 @@ roomRoute.post('/v1/:public_room_id/inquiries', async (req, res, next) => {
         const {
             public_room_id,
             starting_price,
-            fullname,
-            contactNumber,
+            full_name,
+            contact_number,
             email,
-            schedule,
-            targetMoveIn,
-            monthsOfStay,
+            work_schedule,
+            target_move_in,
+            months_of_stay,
             other
         } = req.body;
 
@@ -296,22 +296,34 @@ roomRoute.post('/v1/:public_room_id/inquiries', async (req, res, next) => {
         const result = await createInquiryRecord({
             model: "bedspacio.inquiry",
             values: {
-                public_room_id: public_room_id,
+                public_room_id: Number(public_room_id),
+                form_type: 'Room Inquiry',
                 starting_price: Number(starting_price),
-                full_name: fullname,
-                contact_number: contactNumber,
+                full_name: full_name,
+                contact_number: contact_number,
                 email: email,
-                work_schedule: schedule,
-                target_move_in: new Date(targetMoveIn).toISOString().split('T')[0],
-                months_of_stay: Number(monthsOfStay),
+                work_schedule: work_schedule,
+                target_move_in: new Date(target_move_in).toISOString().split('T')[0],
+                months_of_stay: Number(months_of_stay),
                 others: other,
-                // ip_address: ip
             }
         })
 
 
         if (!result) {
             console.log("Post request result: ", result);
+            return res.status(500).send({
+                success: false,
+                message: 'Internal server error!'
+            })
+        }
+
+        if (result?.name === 'odoo.exceptions.ValidationError') {
+            return res.status(400).json({
+                success: false,
+                message: result.message,
+                error: result
+            });
         }
 
         return res.json({
@@ -332,6 +344,19 @@ roomRoute.post('/v1/:public_room_id/inquiries', async (req, res, next) => {
 })
 
 
+// roomRoute.post('/v1/inquiries/contact', async (req, res) => {
+//     try {
+//         const {
+//             fullName,
+//             contactNumber,
+//             email,
+//             subject,
+//             message
+//         } = req.body;
+//     } catch (err) {
+
+//     }
+// });
 
 
 

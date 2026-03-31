@@ -87,13 +87,12 @@ export async function createInquiryRecord({
                 values 
             ]
         }
-
-        console.log('Inquiry body: ', body)
-
+    
         const result = await odoo.call(path, body);
 
-
-        console.log('Inquiry Record: ', result.data);
+        if (!result) {
+            throw new Error('Unable to proceed with inquiry.');
+        }
         return result.data || result;
 
     } catch (err) {

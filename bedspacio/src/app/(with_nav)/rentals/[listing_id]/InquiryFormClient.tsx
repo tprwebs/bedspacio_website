@@ -42,12 +42,12 @@ export default function InquiryFormClient ({
     startingPrice
 }: PropertyManagerInfo) {
 
-    const [noSlot, setNoSlot] = useState<boolean>(false);
     const [inquireOpen, setInquireOpen] = useState<boolean>(true);
     const [reserveOpen, setReserveOpen] = useState<boolean>(false);
     const [payload, setPayload] = useState<InquiryFormValues|null>(null);
     const [submitting, setSubmitting] = useState<boolean>(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [error, setError] = useState<string>('');
 
     const { register, handleSubmit, reset, formState: { errors, isSubmitSuccessful } } = useForm<InquiryFormValues>();
 
@@ -59,17 +59,34 @@ export default function InquiryFormClient ({
         };
 
         setSubmitting(true);
+        setError('');
 
         try {
-            await SubmitInquiry(data) 
+            const result = await SubmitInquiry(data) 
+
+            if (!result || !result.success) {
+                setError(result?.message || 'Something went wrong');
+                setIsSubmitted(false);
+                return;
+            }
 
             setIsSubmitted(true)
             setPayload(data)
             reset();
 
-        } catch (err) {
+        } catch (err: any) {
             console.error('Error submitting inquiry: ', err);
-            throw err;
+            const message =
+                err?.response?.data?.message ||
+                err?.message ||
+                'Unexpected error occurred';
+
+            setError(message);
+            setIsSubmitted(false);
+            
+
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -132,6 +149,10 @@ export default function InquiryFormClient ({
                                     value.replace(/\D/g, '').length === 11 ||
                                     'Contact number must be 11 digits',
                             })} disabled={slot==0}
+                            onInput={(e) => {
+                                const target = e.target as HTMLInputElement;
+                                target.value = target.value.replace(/[^0-9]/g, '');
+                            }}
                             className={`w-full border border-[#1D242B]/75 p-2 rounded-[10px] font-bold bg-[#FAFAFA] focus:outline-none focus:border-2 focus:border-[#0077C0] ${slot === 0 && 'opacity-50'}`}/>
                             {errors.contactNumber && (
                                 <span className='text-[16px] text-[#FF0000]'>{errors.contactNumber.message}</span>
@@ -155,13 +176,6 @@ export default function InquiryFormClient ({
 
                         <div className='flex flex-col gap-1 w-full'>
                             <span className='text-[14px] text-[#1D242B]'>Work Shift Schedule</span>
-                            {/* <input type="text"  id="schedule" placeholder='Enter the time of your work shift (ex. 10:00 AM to 7:00 PM)'
-                            {...register('schedule', { required: 'Work shift schedule is required.' })}
-                            className='w-full border border-[#1D242B]/75 p-2 rounded-[10px] font-bold bg-[#FAFAFA] focus:outline-none focus:border-2 focus:border-[#0077C0]'/>
-                            {errors.schedule && (
-                                <span className='text-[16px] text-[#FF0000]'>{errors.schedule.message}</span>
-                            )} */}
- 
                             <select className={`w-full border border-[#1D242B]/75 p-2 rounded-[10px] font-bold bg-[#FAFAFA] focus:outline-none focus:border-2 focus:border-[#0077C0] ${slot === 0 && 'opacity-50'}`} defaultValue={""} {...register('schedule', {required: 'Schedule is required.'})} disabled={slot==0}>
                                 {/* Morning Shift, Mid-Shift, Night Shift */}
                                 <option value='' hidden>Select a schedule</option>
@@ -195,7 +209,22 @@ export default function InquiryFormClient ({
                         <div className='flex flex-col gap-1 w-full'>
                             <span className='text-[14px] text-[#1D242B]'>How many months do you plan to stay?</span>
                             <input type="text" id="month_stay" placeholder='Enter a number of months (ex. 3 months)'
-                            { ...register('monthsOfStay', { required: 'Months of Stay is required' })} disabled={slot==0}
+                            {...register('monthsOfStay', {
+                                required: 'Months of Stay is required',
+                                valueAsNumber: true, // 
+                                min: {
+                                    value: 1,
+                                    message: 'Must be at least 1 month',
+                                },
+                                max: {
+                                    value: 60,
+                                    message: 'Too many months',
+                                },
+                            })} disabled={slot==0}
+                            onInput={(e) => {
+                                const target = e.target as HTMLInputElement;
+                                target.value = target.value.replace(/[^0-9]/g, '');
+                            }}
                             className={`w-full border border-[#1D242B]/75 p-2 rounded-[10px] font-bold bg-[#FAFAFA] focus:outline-none focus:border-2 focus:border-[#0077C0] ${slot === 0 && 'opacity-50'}`}/>
                             {errors.monthsOfStay && (
                                 <span className='text-[16px] text-[#FF0000]'>{errors.monthsOfStay.message}</span>
@@ -220,7 +249,7 @@ export default function InquiryFormClient ({
                     </div>
                 )} */}
                 
-                {isSubmitted && payload && (
+                {isSubmitted && isSubmitSuccessful && payload && (
                     <div className='flex flex-col items-center bg-[#C7EEFF] gap-2 p-4 py-5 w-full'>
                         <div  className='flex flex-col items-center w-full bg-[#FAFAFA] p-4 gap-2 rounded-[15px]'>
                             <span className='font-bold text-[22px] text-left'>Submission details:</span>
@@ -265,6 +294,10 @@ export default function InquiryFormClient ({
                             <span className='text-center text-[14px] bg-[#A6EEAB]/50 leading-[1] rounded-[10px] text-[#00822F] w-fit px-3 py-2'>Your inquiry was sent successfully. We've emailed you a confirmation and will be in touch with you soon.</span>
                         </div>
                     </div>
+                )}
+
+                {error && (
+                    <span>{error}</span>
                 )}
             
             {reserveOpen && (

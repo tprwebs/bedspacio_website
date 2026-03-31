@@ -8,6 +8,15 @@ import axios from "axios"
 export default async function SubmitInquiry (data: InquiryFormValues) {
 
     try {
+        console.log("Submitting payload:", {
+            public_room_id: data.public_room_id,
+            name: data.fullname,
+            email: data.email,
+            contact_number: data.contactNumber,
+            move_in_date: data.targetMoveIn,
+            work_schedule: data.schedule,
+            other: data.other
+        });
         
 
         const response = await axios.post(
@@ -15,12 +24,12 @@ export default async function SubmitInquiry (data: InquiryFormValues) {
             {
                 public_room_id: data.public_room_id,
                 starting_price: data.starting_price,
-                fullname: data.fullname,
-                contactNumber: data.contactNumber,
+                full_name: data.fullname,
+                contact_number: data.contactNumber,
                 email: data.email,
-                schedule: data.schedule,
-                targetMoveIn: data.targetMoveIn,
-                monthsOfStay: data.monthsOfStay,
+                work_schedule: data.schedule,
+                target_move_in: data.targetMoveIn,
+                months_of_stay: data.monthsOfStay,
                 other: data.other || "",
             }, 
             {
@@ -29,9 +38,19 @@ export default async function SubmitInquiry (data: InquiryFormValues) {
         );
     
         console.log("Submit Inquiry: ", response.data);
+
+        
+
+        if (!response.data.success) {
+            return {
+                success: false,
+                message: response.data.message,
+            };
+        };
+
         return {
             success: true,
-            message: "Inquiry submitted successfully!",
+            message: response.data.message,
             data: response.data,
         };
 

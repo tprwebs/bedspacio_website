@@ -20,7 +20,7 @@ branchRoute.get('/v1', async (req, res, next) => {
             domain,
             fields: [
                 "branch_name", 
-                "branch_image",
+                // "branch_image",
                 "address"
             ],
             limit: 20,
