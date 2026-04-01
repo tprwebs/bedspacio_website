@@ -26,29 +26,40 @@ roomRoute.get('/v1/listing' , async (req, res) => {
         const inclusionfilter = req.query.inclusion;
 
         if (roomType) domain.push(["room_type", "=", roomType]);
-        if (!isNaN(branchFilter)) domain.push(["branch_id", "=", branchFilter]); // get the id to filter branch
-        if (!isNaN(minBudget)) domain.push(["starting_price", ">=", minBudget]);
-        if (!isNaN(maxBudget)) domain.push(["starting_price", "<=", maxBudget]);
-
-
-        console.log("Room type filter:", roomType);
+        if (branchFilter) domain.push(["branch_id", "=", branchFilter]); // get the id to filter branch
+        if (minBudget) domain.push(["starting_price", ">=", minBudget]);
+        if (maxBudget) domain.push(["starting_price", "<=", maxBudget]);
 
         // filter the data with inclusions
-        if (inclusionfilter) {
-            const inclusionId = (Array.isArray(inclusionfilter) ? inclusionfilter : [inclusionfilter])
-                .map(Number)
-                .filter(Number.isFinite);
+        // if (inclusionfilter) {
+        //     const inclusionId = (Array.isArray(inclusionfilter) ? inclusionfilter : [inclusionfilter])
+        //         .map(Number)
+        //         .filter(Number.isFinite);
 
-            console.log("Filtered inclusion ID: ", inclusionId);
-            domain.push(["inclusion_ids", "in", inclusionId]); // get the id to filter inclusion
+        //     console.log("Filtered inclusion ID: ", inclusionId);
+        //     domain.push(["inclusion_ids", "in", inclusionId]); // get the id to filter inclusion
+        // }
+
+        if (inclusionfilter) {
+            const slugs = Array.isArray(inclusionfilter) ? inclusionfilter : [inclusionfilter]
+
+            const matchedInclusions = await searchRead({
+                model: "bedspacio.room.inclusion",
+                domain: [["slug", "in", slugs]],
+                fields: ["id", "slug"]
+            });
+
+            const inclusionIds = matchedInclusions.map(inc => inc.id);
+
+            if (inclusionIds.length) {
+                domain.push(["inclusion_ids", "in", inclusionIds])
+            }
         }
 
         const totalItems = await executeKw({
             model: "bedspacio.room",
             method: "search_count",
-            kwargs: {
-                domain
-            }
+            kwargs: { domain }
         });
 
         const totalPages = Math.ceil(totalItems / pageSize)
@@ -77,10 +88,11 @@ roomRoute.get('/v1/listing' , async (req, res) => {
             ? await readByIds({
                 model: "bedspacio.room.inclusion",
                 ids: inclusionIds,
-                fields: ["name"]
+                fields: ["name", "slug"]
             })
             : [];
 
+        console.log('INclusion with slug: ', inclusions);
         const inclusionMap = Object.fromEntries(inclusions.map(inc => [inc.id, inc]));
 
 

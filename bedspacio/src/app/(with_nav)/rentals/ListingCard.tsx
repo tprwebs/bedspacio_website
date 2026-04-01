@@ -2,7 +2,6 @@
 
 
 import Link from "next/link"
-import { useParams } from "next/navigation"
 import { ODOO_BASE_URL } from "@/config/config"
 
 type Branch = {

@@ -7,7 +7,8 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation"
 
 export type Inclusions = {
     id: number, 
-    name: string
+    name: string,
+    slug: string
 }
 
 export type InclusionProps = {
@@ -20,15 +21,16 @@ export default function InclusionSelection ({ inclusionList }: InclusionProps ) 
     const pathname = usePathname();
     const router = useRouter();
 
-    const incList = searchParams.getAll("inclusion").map(Number);
+    const incList = searchParams.getAll("inclusion")
 
 
-    const handleInclusionFilter = (e: React.ChangeEvent<HTMLInputElement>, id:number) => {
+    const handleInclusionFilter = (e: React.ChangeEvent<HTMLInputElement>, slug:string) => {
         const checked = e.target.checked;
 
         const updatedList = checked
-            ? [...incList, id]
-            : incList.filter((i) => i !== id);
+            ? [...incList, slug]
+            : incList.filter((i) => i !== slug);
+
 
         const params = new URLSearchParams(searchParams.toString());
         params.delete("inclusion");
@@ -49,9 +51,9 @@ export default function InclusionSelection ({ inclusionList }: InclusionProps ) 
     return (
         <div className="flex flex-wrap items-center justify-start gap-2">
             {inclusionList.map(inc => (
-                <label key={inc.id} htmlFor={`inclusion_${inc.id}`} className={`flex items-center justify-center px-3 py-1 rounded-full cursor-pointer text-[12px] xl:text-[16px] lg:text-[16px] hover:-translate-y-1 active:bg-[#1D242B] xl:active:translate-y-1 lg:active:translate-y-1 ${incList.includes(inc.id) ? 'bg-[#0077C0] text-[#FAFAFA] border-2 border-[#0077C0] font-bold' : 'border-2 border-[#1D242B] text-[#1D242B] font-bold'} transition-all duration-100`}>
-                    <input type="checkbox" onChange={(e) => handleInclusionFilter(e, inc.id)} name="inclusion" id={`inclusion_${inc.id}`} hidden
-                    checked={incList.includes(inc.id)}/>
+                <label key={inc.id} htmlFor={`inclusion_${inc.slug}`} className={`flex items-center justify-center px-3 py-1 rounded-full cursor-pointer text-[12px] xl:text-[16px] lg:text-[16px] hover:-translate-y-1 active:bg-[#1D242B] xl:active:translate-y-1 lg:active:translate-y-1 ${incList.includes(inc.slug) ? 'bg-[#0077C0] text-[#FAFAFA] border-2 border-[#0077C0] font-bold' : 'border-2 border-[#1D242B] text-[#1D242B] font-bold'} transition-all duration-100`}>
+                    <input type="checkbox" onChange={(e) => handleInclusionFilter(e, inc.slug)} name="inclusion" id={`inclusion_${inc.slug}`} hidden
+                    checked={incList.includes(inc.slug)}/>
                     <span>{inc.name}</span>
                 </label>
             ))}

@@ -9,9 +9,11 @@ export default async function SubtmitContactInquiry (data: inquiryFormValues ) {
         > not a lead, only pure inquiries
     */
 
-    return (
-        <div>
-            {/* Something in here */}
-        </div>
-    )
+    const payload = {
+        full_name: data.fullname,
+        contact_number: data.contactnumber,
+        email: data.email,
+        subject: data.message,
+    }
+    
 }

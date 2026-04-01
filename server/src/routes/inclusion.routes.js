@@ -9,7 +9,7 @@ inclusionRoute.get('/v1', async (req, res, next) => {
         const inclusions = await searchRead({
             model: "bedspacio.room.inclusion",
             domain: [],
-            fields: [ "name" ],
+            fields: [ "name", "slug" ],
             limit: 20,
             offset: 0,
             order: "id asc"
@@ -18,7 +18,8 @@ inclusionRoute.get('/v1', async (req, res, next) => {
         res.json(inclusions.map(
             inc => ({
                 id: inc.id,
-                name:inc.name
+                name:inc.name,
+                slug: inc.slug
             })
         )) ?? [];
     } catch (err) {

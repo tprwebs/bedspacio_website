@@ -94,8 +94,6 @@ export default async function Rentals({ searchParams }: { searchParams: Promise 
     
     query.set("page", String(page));
 
-    console.log('[/rentals] Pagination detail: ', roomListings.pagination)
-
     return (
         <div className="flex flex-col items-center justify-start min-h-screen w-full bg-[#FAFAFA] px-0 xl:px-[8rem] lg:px-[4rem]">
 
