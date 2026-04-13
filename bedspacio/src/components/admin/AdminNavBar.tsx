@@ -1,0 +1,95 @@
+"use client"
+
+import Link from "next/link"
+import { useState } from "react"
+import { usePathname } from "next/navigation"
+
+import Home from '@/asset/icon/home.svg'
+import Profile from '@/asset/icon/profile.svg'
+import Logout from '@/asset/icon/log-out.svg'
+import List from '@/asset/icon/list.svg'
+import Listings from '@/asset/icon/listing.svg'
+import ArrowDown from '@/asset/icon/arrow-down.svg'
+import ManagerIcon from '@/asset/icon/people.svg'
+import Branch from '@/asset/icon/location.svg'
+
+export default function AdminNavBar () {
+    const path = usePathname();
+
+    const [profileDropdownVisible, setProfileDropdownVisible] = useState<boolean>(false)
+
+    return (
+        <div className="sticky top-0 flex items-center justify-between bg-[#0077C0] px-[8rem] z-10">
+            
+            <section className="flex items-center">
+                <div className="flex w-full justify-start font-bold text-[28px] text-[#FAFAFA] border-r border-r-[#1D242B] whitespace-nowrap pr-[1rem]">BEDSPACIO ADMIN</div>
+
+                <div className="flex items-center justify-center h-full">
+                    <Link href="/admin/dashboard" className={`h-full relative flex flex-col items-center justify-center p-2 xl:p-6 lg:p-6 whitespace-nowrap text-[#FAFAFA] font-bold hover:bg-[#1D242B]/25 transition-all duration-100  ${path === '/admin/dashboard' && 'bg-[#1D242B]'}`}>Dashboard</Link>
+
+                    <div className="group relative flex flex-col items-center justify-center cursor-pointer">
+                        <div className={`flex items-center gap-1 p-2 xl:p-6 lg:p-6 transition-all duration-100 ${(path.startsWith('/admin/room-listing') || path === '/admin/inclusion') && 'bg-[#1D242B]'} hover:bg-[#1D242B]/25`}>
+                            <span className="text-[#FAFAFA] font-bold whitespace-nowrap">Rooms</span>
+                            <ArrowDown className="w-[23px] h-[23px] fill-[#FFF]/50" />
+                        </div>
+
+                        <div className="opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute top-18 flex flex-col items-center bg-[#0077C0] w-[200px] rounded-b-[10px] shadow-md">
+                            <Link href="/admin/room-listing" className="flex items-center gap-2 w-full p-3 hover:bg-[#C7EEFF]/50">
+                                <Listings className="w-[30px] h-[30px] stroke-[#FFF] " />
+                                <span className="text-[#FAFAFA]">Room Listings</span>
+                            </Link>
+
+                            <Link href="/inclusion" className="flex items-center gap-2 w-full p-3 hover:bg-[#C7EEFF]/50">
+                                <List className="w-[30px] h-[30px] stroke-[#FFF] " />
+                                <span className="text-[#FAFAFA]">Inclusions</span>
+                            </Link>
+                        </div>
+                    </div>
+
+                    <Link href="/admin/branch" className={`flex flex-col items-center justify-center p-2 xl:p-6 lg:p-6 whitespace-nowrap text-[#FAFAFA] font-bold hover:bg-[#1D242B]/25 transition-all duration-100  ${path === '/admin/branch' && 'bg-[#1D242B]'}`}> Branch </Link>
+
+                    <Link href="/admin/inquiry" className={`flex flex-col items-center justify-center p-2 xl:p-6 lg:p-6 whitespace-nowrap text-[#FAFAFA] font-bold hover:bg-[#1D242B]/25 transition-all duration-100  ${path === '/admin/inquiry' && 'bg-[#1D242B]'}`}>Inquiry</Link>
+
+                    <Link href="/admin/manage" className={`flex flex-col items-center justify-center p-2 xl:p-6 lg:p-6 whitespace-nowrap text-[#FAFAFA] font-bold hover:bg-[#1D242B]/25 transition-all duration-100  ${path === '/admin/manage' && 'bg-[#1D242B]'}`}>Manage</Link>
+
+                </div>
+            </section>
+
+            <div className="group relative flex flex-col items-end justify-end w-full">
+                <button onClick={() => setProfileDropdownVisible(prev => !prev)} className="flex items-center justify-center hover:bg-[#C7EEFF]/25 active:bg-[#0077C0] cursor-pointer gap-2 px-2 py-2 rounded-full">
+                    <div className="flex flex-col items-start">
+                        <span className="px-2 text-[#FAFAFA]">Jennifer Sernicula</span>
+                        <span className="px-2 text-[#FAFAFA]/75 text-[12px]">Property Manager</span>
+                    </div>
+                    <div className="flex items-center justify-center bg-[#FAFAFA] rounded-full w-[35px] h-[35px] rounded-full bg-[#FAFAFA]">
+                        {/* Profile Image here */}
+                    </div>
+                </button>
+                {/* 
+                    Shows a dropdown element
+                    > View Profile
+                    > Logout
+                    > Home page
+                */}
+                {profileDropdownVisible && (
+                    <div className="absolute top-12 flex flex-col items-center w-[200px] rounded-[10px] shadow-md bg-[#FFF] border border-[#1D242B]/50 overflow-hidden">
+                        <Link href={`/admin/1`} className="flex items-center justify-between gap-2 w-full p-4 whitespace-nowrap border-b border-[#1D242B]/25 cursor-pointer hover:bg-[#1D242B]/10 active:bg-[#FAFAFA]">
+                            <Profile className="w-[20px] h-[20px] fill-[#1D242B]" />
+                            <span>View Profile</span>
+                        </Link>
+
+                        <Link href="/admin/" className="flex items-center justify-between gap-2 w-full p-4 whitespace-nowrap border-b border-[#1D242B]/25 hover:bg-[#1D242B]/10 active:bg-[#FAFAFA]">
+                            <Home className="w-[25px] h-[25px] stroke-[#1D242B]" />
+                            <span>Go to Home</span>
+                        </Link>
+
+                        <button className="flex items-center justify-between w-full p-4 text-left whitespace-nowrap border-b border-[#1D242B]/25 cursor-pointer hover:bg-[#1D242B]/10 active:bg-[#FAFAFA]">
+                            <Logout className="w-[25px] h-[25px] stroke-[#1D242B]" />
+                            <span>Log Out</span>
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+    )
+}

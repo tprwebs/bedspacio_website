@@ -27,11 +27,11 @@ export default function ContactUs() {
     return (
         <div className="flex flex-col min-h-screen w-full items-start justify-start">
 
-            <div className="flex items-center px-[2rem] xl:px-[6rem]">
+            <div className="flex items-center px-[1rem] xl:px-[8rem] lg:px-[4rem] py-[1rem]">
                 <Breadcrumbs />
             </div>
 
-            <div className="flex flex-col xl:grid lg:grid xl:grid-cols-2 lg:grid-cols-2 px-[2rem] xl:px-[6rem] py-[4rem] gap-[2rem] w-full">
+            <div className="flex flex-col xl:grid lg:grid xl:grid-cols-2 lg:grid-cols-2 px-[1rem] px-[1rem] xl:px-[8rem] lg:px-[4rem] py-[2rem] gap-[2rem] w-full">
                 <div className="flex flex-col xl:flex lg:flex xl:flex-col lg:flex-col md:grid md:grid-cols-2 gap-[2rem] xl:gap-[4rem] lg:gap-[4rem]">
                     <div className="flex flex-col gap-[2rem]">
                         <div className="flex items-center gap-3">

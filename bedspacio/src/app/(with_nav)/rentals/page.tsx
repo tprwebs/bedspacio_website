@@ -103,7 +103,7 @@ export default async function Rentals({ searchParams }: { searchParams: Promise 
 
             <section className="relative flex flex-col items-center justify-center w-full h-auto bg-[#1D242B] py-[2rem] px-[1rem] xl:px-0 lg:px-0 md:px-0 rounded-0 xl:rounded-[5px] lg:rounded-[5px]">
                 <span className="text-[#0077C0] text-[32px] font-bold">Customise Filter</span>
-                <img src="/asset/rentas_bg_image.jpg" alt="rentals-header-image"  className="absolute inset-0 w-full h-full object-cover opacity-25"/>
+                <img src="/image/rentas_bg_image.jpg" alt="rentals-header-image"  className="absolute inset-0 w-full h-full object-cover opacity-25"/>
 
                 <SearchFilter />    
             </section>

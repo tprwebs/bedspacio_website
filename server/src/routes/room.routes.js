@@ -387,4 +387,11 @@ roomRoute.post('/v1/inquiries/contact', async (req, res) => {
 
 
 
+// TODO
+
+/*
+    Create a POST/GET/UPDATE/DELETE API endpoints for backend to database connection
+*/
+
+
 export default roomRoute;

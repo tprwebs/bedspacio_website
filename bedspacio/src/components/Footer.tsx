@@ -14,7 +14,7 @@ export default function Footer() {
         <div className="flex flex-col items-start justify-between min-h-[350px] w-auto px-[1rem] xl:px-[8rem] lg:px-[4rem] md:px-[1rem] pt-[3rem] bg-[#1D242B]">
             <div className="flex flex-col pb-[2rem] xl:grid lg:grid md:grid xl:grid-cols-[40%_30%_30%] lg:grid-cols-[40%_30%_30%] md:grid-cols-[40%_30%_30%] w-full">
                 <div className="flex flex-col items-start justify-start gap-[2.5rem]">
-                    <img src="/asset/bedspacio_logo.jpg" alt="bedspacio-logo" className="w-[100px] h-auto"/>
+                    <img src="/image/bedspacio_logo.jpg" alt="bedspacio-logo" className="w-[100px] h-auto"/>
                     
                 </div>
                 <div className="flex flex-col items-start justify-start w-auto gap-[2rem]">

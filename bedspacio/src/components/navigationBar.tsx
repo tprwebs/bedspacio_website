@@ -18,7 +18,7 @@ export default function NavigationBar({ toggleMobileNav }:Toggle ) {
         <div className="sticky top-0 h-[80px] xl:h-auto lg:h-auto md:h-[80px] flex items-center justify-between lg:grid lg:grid-cols-3 w-full bg-[#FAFAFA] box-border px-[1rem] xl:px-[8rem] lg:px-[4rem] md:px-[1rem] border-b-2 border-[#0077C0] z-30">
             <div className="flex w-full items-center">    
                 <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-                    <img src="/asset/bedspacio_logo.jpg" alt="bedspacio-logo" className="w-[70px] h-auto"/>
+                    <img src="/image/bedspacio_logo.jpg" alt="bedspacio-logo" className="w-[70px] h-auto"/>
                 </Link>
             </div>
 
