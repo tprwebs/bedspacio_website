@@ -6,7 +6,7 @@ export default function Dashboard () {
 
     return (
         <div className="flex w-full min-h-screen">
-            <div className="flex flex-col w-full px-[1rem] xl:px-[8rem] lg:px-[6rem] py-[1rem] gap-[2rem]">
+            <div className="flex flex-col w-full px-[1rem] xl:px-[8rem] lg:px-[6rem] py-[1rem] gap-[4rem]">
                 <div className="flex items-center justify-between w-full">
                     <div className='flex items-center gap-[2rem]'>
                         <span className="text-[28px] text-[#1D242B] font-[900]">Room Listings</span>
@@ -33,7 +33,7 @@ export default function Dashboard () {
                             </select>
                         </div>
 
-                        <Link href="/room-listing/create" className="flex items-center justify-center rounded-[10px] bg-[#0077C0] p-2 cursor-pointer border-2 border-[#0077C0] hover:bg-[#1D242B] hover:border-[#1D242B] active:bg-[#1D242B] xl:active:bg-[#0077C0] transition-all duration-100">
+                        <Link href="/admin/room-listing/create" className="flex items-center justify-center rounded-[10px] bg-[#0077C0] p-2 cursor-pointer border-2 border-[#0077C0] hover:bg-[#1D242B] hover:border-[#1D242B] active:bg-[#1D242B] xl:active:bg-[#0077C0] transition-all duration-100">
                             <Add className="w-[25px] h-auto stroke-[#FAFAFA]" />
                             <span className="text-[#FAFAFA] text-[16px] px-2">Create</span>
                         </Link>
@@ -59,7 +59,7 @@ export default function Dashboard () {
                     
                     {/* TABLE CONTENT*/}
                     <div className='flex flex-col w-full'>
-                        <Link href={`/room-listing/1`} className='grid grid-cols-[10%_30%_15%_15%_15%_15%] w-full justify-items-center py-[1rem] cursor-pointer border-b border-b-[#1D242B]/25 hover:bg-[#C7EEFF]/50 active:bg-[#FAFAFA] transition-all duration-100'>
+                        <Link href={`/admin/room-listing/1`} className='grid grid-cols-[10%_30%_15%_15%_15%_15%] w-full justify-items-center py-[1rem] cursor-pointer border-b border-b-[#1D242B]/25 hover:bg-[#C7EEFF]/50 active:bg-[#FAFAFA] transition-all duration-100'>
                             <span>123456</span>
                             <span>Female Bedspace Available - Safe, Cozy, and Affordable!</span>
                             <span>Pembo</span>

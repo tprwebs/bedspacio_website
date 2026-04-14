@@ -134,9 +134,9 @@ export default function BranchViewModal ({ isModalOpen }:CreateBranchModalProp) 
 
                 {/* 
                     Add a state later if details are changed 
-                    IMPORTANT: Uncomment the button below later    
+                    Display this button if changes were made
                 */}
-                {/* <button className='w-full bg-[#0077C0] text-[#FAFAFA] font-bold rounded-[10px] py-[1rem] cursor-pointer hover:bg-[#0077C0]/90 active:bg-[#0077C0]'>Save Changes</button> */}
+                <button className='w-full bg-[#0077C0] text-[#FAFAFA] font-bold rounded-[10px] py-[1rem] cursor-pointer hover:bg-[#0077C0]/90 active:bg-[#0077C0]'>Save Changes</button>
             
             </div>
         </div>

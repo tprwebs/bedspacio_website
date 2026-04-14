@@ -25,7 +25,7 @@ export default function AdminNavBar () {
                 <div className="flex w-full justify-start font-bold text-[28px] text-[#FAFAFA] border-r border-r-[#1D242B] whitespace-nowrap pr-[1rem]">BEDSPACIO ADMIN</div>
 
                 <div className="flex items-center justify-center h-full">
-                    <Link href="/admin/dashboard" className={`h-full relative flex flex-col items-center justify-center p-2 xl:p-6 lg:p-6 whitespace-nowrap text-[#FAFAFA] font-bold hover:bg-[#1D242B]/25 transition-all duration-100  ${path === '/admin/dashboard' && 'bg-[#1D242B]'}`}>Dashboard</Link>
+                    <Link href="/admin" className={`h-full relative flex flex-col items-center justify-center p-2 xl:p-6 lg:p-6 whitespace-nowrap text-[#FAFAFA] font-bold hover:bg-[#1D242B]/25 transition-all duration-100  ${path === '/admin' && 'bg-[#1D242B]'}`}>Dashboard</Link>
 
                     <div className="group relative flex flex-col items-center justify-center cursor-pointer">
                         <div className={`flex items-center gap-1 p-2 xl:p-6 lg:p-6 transition-all duration-100 ${(path.startsWith('/admin/room-listing') || path === '/admin/inclusion') && 'bg-[#1D242B]'} hover:bg-[#1D242B]/25`}>
@@ -39,7 +39,7 @@ export default function AdminNavBar () {
                                 <span className="text-[#FAFAFA]">Room Listings</span>
                             </Link>
 
-                            <Link href="/inclusion" className="flex items-center gap-2 w-full p-3 hover:bg-[#C7EEFF]/50">
+                            <Link href="/admin/inclusion" className="flex items-center gap-2 w-full p-3 hover:bg-[#C7EEFF]/50">
                                 <List className="w-[30px] h-[30px] stroke-[#FFF] " />
                                 <span className="text-[#FAFAFA]">Inclusions</span>
                             </Link>
@@ -73,12 +73,12 @@ export default function AdminNavBar () {
                 */}
                 {profileDropdownVisible && (
                     <div className="absolute top-12 flex flex-col items-center w-[200px] rounded-[10px] shadow-md bg-[#FFF] border border-[#1D242B]/50 overflow-hidden">
-                        <Link href={`/admin/1`} className="flex items-center justify-between gap-2 w-full p-4 whitespace-nowrap border-b border-[#1D242B]/25 cursor-pointer hover:bg-[#1D242B]/10 active:bg-[#FAFAFA]">
+                        <Link href={`/admin/1`} onClick={() => setProfileDropdownVisible(false)} className="flex items-center justify-between gap-2 w-full p-4 whitespace-nowrap border-b border-[#1D242B]/25 cursor-pointer hover:bg-[#1D242B]/10 active:bg-[#FAFAFA]">
                             <Profile className="w-[20px] h-[20px] fill-[#1D242B]" />
                             <span>View Profile</span>
                         </Link>
 
-                        <Link href="/admin/" className="flex items-center justify-between gap-2 w-full p-4 whitespace-nowrap border-b border-[#1D242B]/25 hover:bg-[#1D242B]/10 active:bg-[#FAFAFA]">
+                        <Link href="/" className="flex items-center justify-between gap-2 w-full p-4 whitespace-nowrap border-b border-[#1D242B]/25 hover:bg-[#1D242B]/10 active:bg-[#FAFAFA]">
                             <Home className="w-[25px] h-[25px] stroke-[#1D242B]" />
                             <span>Go to Home</span>
                         </Link>
