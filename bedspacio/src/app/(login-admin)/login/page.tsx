@@ -1,18 +1,42 @@
 "use client"
 
-
 import Link from 'next/link'
 import Arrow from '@/asset/icon/arrow-right.svg'
 
+import axios from 'axios'
+import { BASE_URL } from '@/config/config'
 import { useState } from 'react'
-import { PassThrough } from 'stream';
 
 export default function Login () {
+
+
 
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [passwordShow, setPasswordShow] = useState<boolean>(false)
+
+
+
+    const handleLogin = async (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post(`${BASE_URL}/user-setup/v1/login`, { username, password }, { withCredentials: true });
+
+            console.log('Payload: ', {
+                'username': username,
+                'password': password,
+            });
+
+            console.log('User response: ', response.data);
+
+        } catch (err) {
+            console.error('Failed to login: ', err);
+        }
+    }
     
+    
+
     return (
         <div className="flex items-center justify-center w-full min-h-dvh overflow-hidden ">
             <div className="flex flex-col w-[500px] h-auto p-[2rem] border-2 border-[#1D242B]/25 rounded-[10px] gap-[1rem]">
@@ -24,7 +48,7 @@ export default function Login () {
                     <span className="text-[28px] text-[#0077C0] font-bold">Login</span>
                 </div>
 
-                <form className='flex flex-col gap-4'>
+                <form onSubmit={handleLogin} className='flex flex-col gap-4'>
                     <div className='flex flex-col w-full gap-1'>
                         <span className='opacity-75'>Username</span>
                         <input type="text" name="account" id="username" placeholder='Enter username here' value={username} onChange={(e) => setUsername(e.target.value)} className='w-full p-2 bg-[#FAFAFA] font-bold rounded-[5px] border border-[#1D242B]/50 focus:outline-none focus:border-[#0077C0]'/>
@@ -42,10 +66,11 @@ export default function Login () {
 
                         <input type={`${passwordShow ? "text" : "password"}`} placeholder='Enter password here' name="account" id="password" value={password} onChange={(e) => setPassword(e.target.value)} className='w-full p-2 bg-[#FAFAFA] font-bold rounded-[5px] border border-[#1D242B]/50 focus:outline-none focus:border-[#0077C0]'/>
                     </div>
+
+                    <button className='w-full py-3 rounded-[10px] bg-[#0077C0] mt-[1rem] text-[#FAFAFA] font-bold cursor-pointer hover:opacity-90 active:opacity-100'>Continue</button>
                 </form>
 
 
-                <button className='w-full py-3 rounded-[10px] bg-[#0077C0] mt-[1rem] text-[#FAFAFA] font-bold cursor-pointer hover:opacity-90 active:opacity-100'>Continue</button>
             </div>
         </div>
     )

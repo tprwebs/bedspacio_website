@@ -1,8 +1,7 @@
 import { cache } from "react"
 import axios from 'axios'
 import { BASE_URL } from "@/config/config";
-import { RoomImage } from "@/app/(with_nav)/rentals/[listing_id]/RoomImage";
-import { InquiryFormValues } from "@/app/(with_nav)/rentals/[listing_id]/InquiryFormClient";
+
 
 type RoomListingParams = {
     page?: number,

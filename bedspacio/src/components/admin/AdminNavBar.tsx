@@ -10,12 +10,14 @@ import Logout from '@/asset/icon/log-out.svg'
 import List from '@/asset/icon/list.svg'
 import Listings from '@/asset/icon/listing.svg'
 import ArrowDown from '@/asset/icon/arrow-down.svg'
-import ManagerIcon from '@/asset/icon/people.svg'
-import Branch from '@/asset/icon/location.svg'
+
+import { useAuth } from "@/context/AuthContext"
 
 export default function AdminNavBar () {
-    const path = usePathname();
 
+    const user  = useAuth();
+
+    const path = usePathname();
     const [profileDropdownVisible, setProfileDropdownVisible] = useState<boolean>(false)
 
     return (
@@ -56,15 +58,16 @@ export default function AdminNavBar () {
             </section>
 
             <div className="group relative flex flex-col items-end justify-end w-full">
-                <button onClick={() => setProfileDropdownVisible(prev => !prev)} className="flex items-center justify-center hover:bg-[#C7EEFF]/25 active:bg-[#0077C0] cursor-pointer gap-2 px-2 py-2 rounded-full">
-                    <div className="flex flex-col items-start">
-                        <span className="px-2 text-[#FAFAFA]">Jennifer Sernicula</span>
-                        <span className="px-2 text-[#FAFAFA]/75 text-[12px]">Property Manager</span>
+                <button onClick={() => setProfileDropdownVisible(prev => !prev)} className="flex items-center justify-center bg-[#C7EEFF]/25 hover:bg-[#1D242B]/25 active:bg-[#0077C0] cursor-pointer gap-2 px-2 py-2 rounded-full transition-all duration-100">
+                    <div className="flex flex-col items-start justify-center">
+                        <span className="px-3 text-[#FAFAFA] text-[16px] font-bold leading-tight">{user?.fullname}</span>
+                        <span className="px-3 text-[#FAFAFA]/80 leading-tight text-[14px]">{user?.role}</span>
                     </div>
                     <div className="flex items-center justify-center bg-[#FAFAFA] rounded-full w-[35px] h-[35px] rounded-full bg-[#FAFAFA]">
-                        {/* Profile Image here */}
-                    </div>
-                </button>
+
+                        
+                    </div> 
+                </button> 
                 {/* 
                     Shows a dropdown element
                     > View Profile
