@@ -21,6 +21,7 @@ export default function Home() {
 
                 <div className="absolute flex flex-col items-center justify-center xl:justify-center lg:justify-center md:justify-center w-full h-auto xl:gap-[5rem] lg:gap-[5rem] gap-[5rem] p-[1rem] border-box xl:p-0 lg:p-[1rem] md:p-[2rem]">
                     <div className="flex flex-col items-center justify-center gap-[1rem] xl:gap-[2rem] lg:gap-[2rem] md:gap-[1rem] xl:w-[800px] lg:w-[800px] md:w-[800px]">
+                        <span className='text-[32px] text-[#1D242B] leading-[0] font-bold'>BedSpacio</span>
                         <span className="text-[#FAFAFA] text-[55px] xl:text-[84px] lg:text-[84px] md:text-[72px] font-[900] leading-[1] text-center">Where Every Bed Feels Like Home</span>
 
                         <span className="flex justify-center text-[#1D242B] text-[20px] md:text-[24px] text-center font-bold w-full">Made for students, workers, and everyday city living.</span>

@@ -4,7 +4,9 @@ import Arrow from '@/asset/icon/arrow-long.svg'
 
 import Breadcrumbs from "@/components/BreadCrumb";
 import Link from "next/link";
+import { useState } from 'react';
 import { useForm } from "react-hook-form";
+import SubtmitContactInquiry from './SubtmitContactInquiry';
 
 export type inquiryFormValues = {
     fullname: string,
@@ -16,13 +18,53 @@ export type inquiryFormValues = {
 
 export default function ContactUs() {
 
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>('');
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
     const { register, handleSubmit, reset, formState: { errors, isSubmitSuccessful } } = useForm<inquiryFormValues>();
     
-    const onSubmit = (data: inquiryFormValues) => {
-        console.log('Payload: ', data);
-        reset();
-    }
+    const onSubmit = async (data: inquiryFormValues) => {
+
+        setLoading(true);
+        setError('');
+        setIsSubmitted(false);
+
+
+        try {
+            // Fake loading of 1.5 seconds
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            const result = await SubtmitContactInquiry(data);
+
+            if (!result?.success) {
+                setError(
+                    result?.message ||
+                    'Something went wrong'
+                );
+                return;
+            }
+
+            console.log("Payload: ", data);
+
+            setIsSubmitted(true)
+            reset();
+
+        } catch (err: any) {
+            console.error('Error submitting inquiry: ', err);
+            const message =
+                err?.response?.data?.message ||
+                err?.message ||
+                'Unexpected error occurred';
+
+            setError(message);
+            setIsSubmitted(false);
+
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     return (
         <div className="flex flex-col min-h-screen w-full items-start justify-start">
@@ -55,7 +97,7 @@ export default function ContactUs() {
                     </div>
                 </div>
 
-                {!isSubmitSuccessful ? (
+                {!isSubmitted && !loading && (
                     <div className="flex flex-col w-full h-auto rounded-[15px] border border-[#1D242B]/50 bg-[#C7EEFF]/50 overflow-hidden">
                         <span className="w-full py-[0.5rem] border-b-2 border-dashed border-b-[#1D242B]/50 text-[26px] text-center bg-[#FAFAFA] italic">Inquiry Form</span>
 
@@ -135,7 +177,15 @@ export default function ContactUs() {
                             <button className="w-fit self-end px-[4rem] py-[0.75rem] bg-[#1D242B] rounded-full text-[#FAFAFA] cursor-pointer hover:bg-[#0077C0] active:bg-[#1D242B] transition-all duration-100">Submit</button>
                         </form>
                     </div>
-                ) : (
+                )}
+
+                {loading && (
+                    <div className="flex w-full items-center justify-center py-[2rem] min-[200px]">
+                        <img src="/loading/loading.gif" alt="loading" className='w-[50px] h-[50px]'/>
+                    </div>
+                )}
+                
+                {isSubmitted && isSubmitSuccessful && (
                     <div className="flex flex-col w-full h-auto items-center justify-center rounded-[15px] border-2 border-dashed border-[#1D242B]/50 bg-[#C7EEFF]/50 gap-[1rem] p-2 py-[6rem] xl:py-[1rem] lg:py-[1rem]">
                         <span className="text-[28px] text-[#0077C0] font-bold">INQUIRY SENT!</span>
                         <span className="text-[20px] text-[#1D242B] text-center leading-[1.2] w-full">Thank you! Your inquiry was submitted successfully. We sent you a confirmation email and will be in touch with you soon.</span>

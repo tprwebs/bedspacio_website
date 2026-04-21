@@ -10,10 +10,9 @@ export interface Branch {
 }
 
 export const getBranches = cache( async () => {
-    const response = await axios.get<Branch[]>(`${BASE_URL}/branch/v1`, { withCredentials: true })
-    
+    const response = await axios.get(`${BASE_URL}/branch/v1`, { withCredentials: true });
     return response.data ?? [];
-})
+});
 
 
 export const getManagers = cache( async () => {

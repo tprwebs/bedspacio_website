@@ -12,6 +12,11 @@ interface ModalProp {
 }
 
 
+// TODO: 
+/*
+    ADD a button that automatically copies the data { username, password }
+*/
+
 export default function CreatedUserModal ({ data, closeModal }: ModalProp) {
 
     return (

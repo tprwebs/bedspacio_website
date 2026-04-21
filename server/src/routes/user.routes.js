@@ -87,7 +87,7 @@ userRoute.post('/v1/new_user', requireAuth, async (req, res) => {
         );
 
         return res.json({
-            message: 'User created succesfully',
+            message: 'User Created Succesfully',
             username: username,
             password: plainPassword
         });
@@ -101,6 +101,63 @@ userRoute.post('/v1/new_user', requireAuth, async (req, res) => {
 
         console.error('Error creating new user: ', err);
         return res.status(500).json({ message: 'Server error' });
+    }
+});
+
+
+userRoute.get('/v1/users', requireAuth, async (req, res) => {
+    try {
+
+        const response = await db.manyOrNone(
+            `SELECT 
+                id, 
+                username,
+                fullname,
+                role,
+                is_active,
+                last_login
+            FROM users`
+        );
+
+        console.log(response);
+
+        return res.status(200).json(response);
+
+    } catch (err) {
+        console.error('Error retrieving users: ', err);
+
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            success: false
+        })
+    }
+});
+
+
+userRoute.get('/v1/users/:id', requireAuth, async (req, res) => {
+    try {
+        const id = Number(req.params.id);
+
+        if (!id) {
+            throw new Error('ID required');
+        }
+
+        const response = await db.one(`
+            SELECT
+                fullname,
+                username,
+                contact_number,
+                email,
+                role,
+                is_active
+            FROM users 
+            WHERE id = $1
+        `, [id]);
+
+        return res.status(200).json(response)
+
+    } catch(err) {
+        console.error('Failed to retreive user data: ', err);
     }
 });
 

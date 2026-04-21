@@ -3,21 +3,31 @@
 import { useState } from "react"
 import Back from '@/asset/icon/arrow-right.svg';
 
-interface ModalProp {
-    isModalOpen: () => void;
+export type UserInfo = {
+    fullname: string,
+    role: string, 
+    username: string,
+    contact_number: string,
+    email: string,
+    is_active: boolean,
 }
 
-export default function UserViewWrapperModal ({ isModalOpen }: ModalProp) {
+interface ModalProp {
+    isModalOpen: () => void;
+    user: UserInfo;
+}
 
-    const [isActive, setIsActive] = useState<string>('active');
+export default function UserViewWrapperModal ({ isModalOpen, user }: ModalProp) {
+
     const [roleSelected, setRoleSelected] = useState<string>('property_manager');
 
     const [userInfo, setUserInfo] = useState({
-        name: '',
-        username: '',
-        contact_number: '',
-        email: '',
-        role: ''
+        name: user?.fullname,
+        username: user?.username,
+        contact_number: user?.contact_number,
+        email: user?.email,
+        role: user?.role,
+        is_active: user?.is_active 
     });
 
     const [userEditing, setUserEditing] = useState({
@@ -45,17 +55,89 @@ export default function UserViewWrapperModal ({ isModalOpen }: ModalProp) {
                     <span className="text-[#1D242B] text-[24px] font-bold leading-tight">User Info</span>
                 </div>
                 
-                <div className="flex items-center gap-1">
+                {/* <div className="flex items-center gap-1">
                     <span className="text-[#1D242B] text-[14px] font-bold">Account Status</span>
                     <div className="flex items-center rounded-full p-1 bg-[#1D242B] overflow-hidden">
-                        <label htmlFor="active" className={`px-2 rounded-full cursor-pointer ${isActive === 'active'? "bg-[#007C00] text-[#FAFAFA] font-bold" : "text-[#FAFAFA] font-bold"}`}>
+                        <label htmlFor="active" 
+                            className={`px-2 rounded-full cursor-pointer 
+                                ${userInfo.is_active === true 
+                                ?  "bg-[#007C00] text-[#FAFAFA] font-bold" 
+                                : "text-[#FAFAFA] font-bold"
+                                }`
+                            }>
                             <span className="text-[12px] leading-[1]">Active</span>
-                            <input type="radio" name="status" id="active" value={'active'} onChange={() => setIsActive('active')} hidden/>
+                            <input type="radio" name="status" id="active" hidden checked={userInfo.is_active === true} 
+                                onChange={() => 
+                                    setUserInfo(prev =>({
+                                        ...prev,
+                                        is_active: true
+                                    }))
+                                } 
+                            />
                         </label>
-                        <label htmlFor="inactive" className={`px-2 rounded-full cursor-pointer ${isActive === 'inactive'? "bg-[#7C7C7C] text-[#FAFAFA] font-bold" : "text-[#FAFAFA] font-bold"}`}>
+                        <label htmlFor="inactive" 
+                            className={`px-2 rounded-full cursor-pointer 
+                                ${userInfo.is_active === false 
+                                    ? "bg-[#7C7C7C] text-[#FAFAFA] font-bold" 
+                                    : "text-[#FAFAFA] font-bold"
+                                }`
+                            }>
                             <span className="text-[12px] leading-[1]">Inactive</span>
-                            <input type="radio" name="status" id="inactive" value={'inactive'} onChange={() => setIsActive('inactive')} hidden/>
+                            <input type="radio" name="status" id="inactive" hidden checked={userInfo.is_active === false} 
+                                onChange={() => 
+                                    setUserInfo(prev => ({
+                                        ...prev,
+                                        is_active: false
+                                    }))
+                                }
+                            />
                         </label>
+                    </div>
+                </div> */}
+
+                <div className="flex items-center gap-1">
+                    <span className="text-[#1D242B] text-[14px] font-bold">
+                        Account Status
+                    </span>
+
+                    <div className="flex items-center rounded-full p-1 bg-[#1D242B] overflow-hidden">
+
+                        {/* ACTIVE */}
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setUserInfo(prev => ({
+                                    ...prev,
+                                    is_active: true
+                                }))
+                            }
+                            className={`px-2 rounded-full cursor-pointer ${
+                                userInfo.is_active === true
+                                    ? "bg-[#007C00] text-[#FAFAFA] font-bold"
+                                    : "text-[#FAFAFA] font-bold"
+                            }`}
+                        >
+                            <span className="text-[12px] leading-[1]">Active</span>
+                        </button>
+
+                        {/* INACTIVE */}
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setUserInfo(prev => ({
+                                    ...prev,
+                                    is_active: false
+                                }))
+                            }
+                            className={`px-2 rounded-full cursor-pointer ${
+                                userInfo.is_active === false
+                                    ? "bg-[#7C7C7C] text-[#FAFAFA] font-bold"
+                                    : "text-[#FAFAFA] font-bold"
+                            }`}
+                        >
+                            <span className="text-[12px] leading-[1]">Inactive</span>
+                        </button>
+
                     </div>
                 </div>
             </div>
@@ -70,12 +152,20 @@ export default function UserViewWrapperModal ({ isModalOpen }: ModalProp) {
                     
                     {userEditing.name ? (
                         <div className="flex items-center justify-center w-full"> 
-                            <input type="text" placeholder="Enter name here" className="w-full text-[#1D242B] font-bold focus:outline-none"/>
+                            <input type="text" placeholder="Enter name here" value={userInfo.name || ''}
+                                onChange={(e) => 
+                                    setUserInfo(prev => ({
+                                        ...prev,
+                                        name: e.target.value
+                                    }))
+                                }
+                                className="w-full text-[#1D242B] font-bold focus:outline-none"
+                            />
                             <button onClick={() => toggleEditUser('name')} className="text-[#0077C0] text-[14px] font-bold cursor-pointer active:text-[#0077C0]/50">Cancel</button>
                         </div>
                     ) : (
                         <div className="flex items-center justify-center w-full">
-                            <span className="w-full text-[#1D242B] font-bold">Angelo Cabangal</span>
+                            <span className="w-full text-[#1D242B] font-bold">{userInfo?.name}</span>
                             <button onClick={() => toggleEditUser('name')} className="text-[#0077C0] text-[14px] font-bold cursor-pointer active:text-[#0077C0]/50">Edit</button>
                         </div>
                     )}
@@ -86,12 +176,20 @@ export default function UserViewWrapperModal ({ isModalOpen }: ModalProp) {
 
                     {userEditing.username ? (
                         <div className="flex items-center justify-center w-full">
-                            <input type="text" placeholder="Enter username here" className="w-full text-[#1D242B] font-bold focus:outline-none"/>
+                            <input type="text" placeholder="Enter username here" value={userInfo.username || ''}
+                                onChange={(e) => 
+                                    setUserInfo(prev => ({
+                                        ...prev,
+                                        username: e.target.value
+                                    }))
+                                }
+                                className="w-full text-[#1D242B] font-bold focus:outline-none"
+                            />
                             <button onClick={() => toggleEditUser('username')} className="text-[#0077C0] text-[14px] font-bold cursor-pointer active:text-[#0077C0]/50">Cancel</button>
                         </div>
                     ) : (
                         <div className="flex items-center justify-center w-full">
-                            <span className="w-full text-[#1D242B] font-bold">Angelo Cabangal</span>
+                            <span className="w-full text-[#1D242B] font-bold">{userInfo.username}</span>
                             <button onClick={() => toggleEditUser('username')} className="text-[#0077C0] text-[14px] font-bold cursor-pointer active:text-[#0077C0]/50">Edit</button>
                         </div>
                     )}
@@ -103,12 +201,20 @@ export default function UserViewWrapperModal ({ isModalOpen }: ModalProp) {
 
                     {userEditing.contact_number ? (
                         <div className="flex items-center justify-center w-full">
-                            <input type="text" placeholder="Enter contact number here" className="w-full text-[#1D242B] font-bold focus:outline-none"/>
+                            <input type="text" placeholder="Enter contact number here" value={userInfo.contact_number || ''}
+                                onChange={(e) => 
+                                    setUserInfo(prev => ({
+                                        ...prev,
+                                        contact_number: e.target.value
+                                    }))
+                                }
+                                className="w-full text-[#1D242B] font-bold focus:outline-none"
+                            />
                             <button onClick={() => toggleEditUser('contact_number')} className="text-[#0077C0] text-[14px] font-bold cursor-pointer active:text-[#0077C0]/50">Cancel</button>
                         </div>
                     ) : (
                         <div className="flex items-center justify-center w-full">
-                            <span className="w-full text-[#1D242B] font-bold">09123456789</span>
+                            <span className="w-full text-[#1D242B] font-bold">{userInfo.contact_number}</span>
                             <button onClick={() => toggleEditUser('contact_number')} className="text-[#0077C0] text-[14px] font-bold cursor-pointer active:text-[#0077C0]/50">Edit</button>
                         </div>
                     )}
@@ -120,12 +226,20 @@ export default function UserViewWrapperModal ({ isModalOpen }: ModalProp) {
 
                     {userEditing.email ? (
                         <div className="flex items-center justify-center w-full">
-                            <input type="text" placeholder="Enter email here" className="w-full text-[#1D242B] font-bold focus:outline-none"/>
+                            <input type="text" placeholder="Enter email here" value={userInfo.email || ''}
+                                onChange={(e) => 
+                                    setUserInfo(prev => ({
+                                        ...prev,
+                                        email: e.target.value
+                                    }))
+                                }
+                                className="w-full text-[#1D242B] font-bold focus:outline-none"
+                            />
                             <button onClick={() => toggleEditUser('email')} className="text-[#0077C0] text-[14px] font-bold cursor-pointer active:text-[#0077C0]/50">Cancel</button>
                         </div>
                     ) : (
                         <div className="flex items-center justify-center w-full">
-                            <span className="w-full text-[#1D242B] font-bold">anderdingus@gmail.com</span>
+                            <span className="w-full text-[#1D242B] font-bold">{userInfo.email}</span>
                             <button onClick={() => toggleEditUser('email')} className="text-[#0077C0] text-[14px] font-bold cursor-pointer active:text-[#0077C0]/50">Edit</button>
                         </div>
                     )}
@@ -152,7 +266,7 @@ export default function UserViewWrapperModal ({ isModalOpen }: ModalProp) {
                         </div>
                     ) : (
                         <div className="flex items-center justify-between w-full">
-                            <span className="text-[#1D242B] font-bold">Property Manager</span>
+                            <span className="text-[#1D242B] font-bold">{userInfo.role}</span>
                             <button onClick={() => toggleEditUser('role')} className="text-[#0077C0] text-[14px] font-bold cursor-pointer active:text-[#0077C0]/50">Edit</button>
                         </div>
                     )}

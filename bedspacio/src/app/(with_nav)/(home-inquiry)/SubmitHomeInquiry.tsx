@@ -1,20 +1,15 @@
-"use server"
+"use server" 
 
-import { inquiryFormValues } from "./page"
-import axios from "axios";
-import { BASE_URL } from "@/config/config";
+import axios from 'axios';
+import { BASE_URL } from '@/config/config'
+import { InquiryValues } from "@/components/HomeInquiry";
 
-export default async function SubtmitContactInquiry (data: inquiryFormValues ) {
-
-    /*
-        > Inquiry form from contact-us
-        > not a lead, only pure inquiries
-    */
+export default async function SubmitHomeInquiry (data: InquiryValues) {
 
     try {
         const response = await axios.post(`${BASE_URL}/inquiry/v1/crm-record/lead`, {
             fullname: data.fullname,
-            contactNumber: data.contactnumber,
+            contactNumber: data.contactNumber,
             email: data.email,
             subject: data.subject,
             message: data.message

@@ -11,7 +11,7 @@ export default function WithNavigation({ children }: { children: React.ReactNode
     const [toggleNav, setToggleNav] = useState<boolean>(false)
 
     return (
-        <div className="w-full min-h-screen">
+        <div className="flex flex-col w-full min-h-screen">
 
             <NavigationBar toggleMobileNav={() => setToggleNav(prev => !prev)}/>
 

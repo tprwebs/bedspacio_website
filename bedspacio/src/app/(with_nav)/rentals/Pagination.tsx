@@ -42,7 +42,7 @@ export default function Pagination ({ pageDetails, currentPage }: PageProp) {
         <div className="flex items-center justify-center w-full px-[1rem] py-[2rem] gap-[1rem]">
             <Link href={createPageURL(prevPage)} 
                 className={`${currentPage <= 1 ? 'pointer-events-none opacity-25' : 'opacity-100 hover:bg-[#1D242B]/10 active:bg-[#0077C0]'} cursor-pointer p-1 rounded-[5px] border-2 border-[#1D242B]/25 `}>
-                <Arrow className="rotate-90 w-[30px] h-[30px]" />
+                <Arrow className="rotate-90 w-[30px] h-[30px] fill-[#1D242B]" />
             </Link>
             <div className="flex items-center gap-[0.5rem]">
                 {Array.from({length: pageDetails.totalPages}, (_, index) => index + 1 ).map((page) => (
@@ -53,7 +53,7 @@ export default function Pagination ({ pageDetails, currentPage }: PageProp) {
             </div>
             <Link href={createPageURL(nextPage)}
                 className={`cursor-pointer p-1 rounded-[5px] border-2 border-[#1D242B]/25 ${pageDetails.totalPages === currentPage ? 'pointer-events-none opacity-25' : 'hover:bg-[#1D242B]/10 active:bg-[#0077C0]'}`}>
-                <Arrow className="-rotate-90 w-[30px] h-[30px]" />
+                <Arrow className="-rotate-90 w-[30px] h-[30px] fill-[#1D242B]" />
             </Link>
         </div>
     )

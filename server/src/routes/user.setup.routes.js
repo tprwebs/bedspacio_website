@@ -35,6 +35,8 @@ userSetupRoute.post('/v1/login', async (req, res) => {
             });
         }
 
+        await db.none(`UPDATE users SET last_login = NOW() WHERE id = $1`, [ response.id ]);
+
         req.session.user = {
             id: response.id,
             fullname: response.fullname,

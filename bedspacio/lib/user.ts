@@ -4,6 +4,7 @@ import { cache } from "react"
 import { cookies } from "next/headers";
 import axios from 'axios'
 import { BASE_URL } from "@/config/config";
+import { error } from "console";
 
 
 export const getCurrentUser = cache( async () => {
@@ -34,7 +35,7 @@ export const getCurrentUser = cache( async () => {
 });
 
 
-export const getUserInfo = async () => {
+export const getCurrentUserInfo = async () => {
     try {
         const cookieStore = await cookies();
         const cookieHeader = cookieStore.toString();
@@ -52,3 +53,45 @@ export const getUserInfo = async () => {
         console.error('Error retreiving profile data: ', err);
     }
 };  
+
+
+export const getAllUsers = async () => {
+    try {
+
+        const cookieStore = await cookies();
+        const cookieHeader = cookieStore.toString();
+        
+        const response = await axios.get(`${BASE_URL}/user/v1/users`,{
+            headers: {
+                Cookie: cookieHeader
+            }
+        })
+
+        return response.data ?? [];
+
+    } catch (err) {
+        console.error('Error retreiving users: ', err);
+        throw err;
+    }
+};
+
+
+
+export const getUserInfo = async (id: number) => {
+    try {
+
+        const cookieStore = await cookies();
+        const cookieHeader = cookieStore.toString();
+
+        const response = await axios.get(`${BASE_URL}/user/v1/users/${id}`, {
+            headers: {
+                Cookie: cookieHeader
+            }
+        });
+
+        return response.data;
+
+    } catch (err) {
+        console.error('Failed to retrieve user information: ', err);
+    }
+}

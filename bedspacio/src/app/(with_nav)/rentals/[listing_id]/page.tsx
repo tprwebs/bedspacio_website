@@ -12,11 +12,14 @@ import { ODOO_BASE_URL } from "@/config/config";
 import RoomImages from "./RoomImage";
 
 
+
+
 type Props = { params: Promise<{ listing_id: number }> };
 
 type Inclusions = {
     id: number,
-    name: string
+    name: string,
+    slug: string
 }
 
 type PaymentTerms = {
@@ -56,6 +59,8 @@ export default async function ListingInfoPage ({ params }: Props ) {
 
     const room = await getRoomDetails(listing_id);
     console.log('Room details from roomImages: ', room);
+    
+
     
 
     return (
@@ -125,7 +130,7 @@ export default async function ListingInfoPage ({ params }: Props ) {
                             <span className="text-[20px] text-[#1D242B] font-[900]">Inclusion/s</span>
                             <div className="flex flex-wrap gap-[0.5rem] items-start">
                                 {room.inclusions.map((inc:Inclusions) => (
-                                    <Link href={`/rentals?page=1&inclusion=${inc.id}`} key={inc.id} className="group flex items-center justify-center gap-2 rounded-full border-2 border-[#0077C0] px-3 py-2 hover:bg-[#0077C0] text-[#0077C0] active:bg-[#1D242B] active:border-[#1D242B]">
+                                    <Link href={`/rentals?page=1&inclusion=${inc.slug}`} key={inc.id} className="group flex items-center justify-center gap-2 rounded-full border-2 border-[#0077C0] px-3 py-2 hover:bg-[#0077C0] text-[#0077C0] active:bg-[#1D242B] active:border-[#1D242B]">
                                         <span className="group-hover:text-[#FAFAFA] text-[16px] font-bold leading-[0.75]">{inc.name}</span>
                                     </Link>
                                 ))}

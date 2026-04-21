@@ -3,6 +3,8 @@
 import { useForm } from "react-hook-form"
 import { useState } from "react";
 
+import SubmitHomeInquiry from "@/app/(with_nav)/(home-inquiry)/SubmitHomeInquiry";
+
 export type InquiryValues = {
     fullname: string,
     contactNumber: string,
@@ -14,20 +16,70 @@ export type InquiryValues = {
 
 export default function HomeInquiry() {
 
-    const { register, handleSubmit, reset, formState: { errors, isSubmitSuccessful } } = useForm<InquiryValues>(); 
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>('');
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<InquiryValues>(); 
     
-    const onSubmit = (data: InquiryValues) => {
+    const onSubmit = async (data: InquiryValues) => {
         // Send the data using the payload from InquiryValues to backend
-        console.log("Payload: ", data)
-        reset();
+        setLoading(true);
+        setError('');
+        setIsSubmitted(false);
+
+        try {
+            // Fake loading of 1.5 seconds 
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+
+            const [lead_result] = await Promise.all([
+                SubmitHomeInquiry(data),
+
+            ])
+
+            if (!lead_result?.success) {
+                setError(
+                    lead_result?.message ||
+                    'Something went wrong'
+                );
+                return;
+            };
+
+            console.log("Payload: ", data);
+
+            setIsSubmitted(true)
+            reset();
+
+        } catch (err: any) {
+            console.error('Error submitting inquiry: ', err);
+            const message =
+                err?.response?.data?.message ||
+                err?.message ||
+                'Unexpected error occurred';
+
+            setError(message);
+            setIsSubmitted(false);
+
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    if (loading) {
+        return (
+            <div className="flex w-full items-center justify-center py-[2rem] min-[200px]">
+                <img src="/loading/loading.gif" alt="loading" className='w-[50px] h-[50px]'/>
+            </div>
+        )
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center justify-center w-full h-auto py-[4rem] px-[1rem] xl:px-[8rem] lg:px-[8rem] md:px-[4rem] gap-[1rem]">
-            <span className="text-[48px] text-[#1D242B] text-center font-[900] leading-[1]">{!isSubmitSuccessful ? 'INQUIRE NOW' : 'INQUIRY SENT'}</span>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center justify-center w-full h-auto py-[4rem] px-[1rem] xl:px-[8rem] lg:px-[8rem] md:px-[4rem] gap-[1rem] border-dashed border-t-2 border-t-[#1D242B]/50">
+            <span className="text-[48px] text-[#1D242B] text-center font-[900] leading-[1]">{!isSubmitted ? 'INQUIRE NOW' : 'INQUIRY SENT'}</span>
             
-            {!isSubmitSuccessful ? (
-                <div className="flex flex-col items-center justify-center w-full xl:w-[700px] lg:w-[700px] md:w-[600px] h-auto gap-2">
+            {!isSubmitted && !loading ? (
+                <div className="flex flex-col items-center justify-center w-full xl:w-[700px] lg:w-[700px] md:w-[600px] h-auto gap-[1rem]">
                     <div className="flex flex-col items-start gap-1 w-full">
                         <span className="text-[16px] text-[#1D242B]">Full name</span>
                         <input type="text" id="full_name" placeholder="Enter your full name here..." 
@@ -99,12 +151,12 @@ export default function HomeInquiry() {
                     </div>
                 </div>
             ) : (
-                <div className="flex w-[500px] p-[2rem] border-dashed border-2 border-[#0077C0] rounded-[10px] bg-[#C7EEFF]">
+                <div className="flex w-[500px] p-[2rem] rounded-[10px] bg-[#C7EEFF]">
                     <span className="text-[18px] text-[#0077C0] text-center leading-[1.2] font-bold">Thank You! Your inquiry was submitted successfully. We've emailed you a confirmation and will be in with you touch soon.</span>
                 </div>
             )}
 
-            {!isSubmitSuccessful && (
+            {!isSubmitted && (
                 <button className="bg-[#1D242B] w-full xl:w-[700px] lg:w-[700px] md:w-[600px] p-3 rounded-[10px] text-[#FAFAFA] text-[18px] font-bold cursor-pointer hover:bg-[#1D242B]/90 active:bg-[#1D242B] transition-all duration-100">Submit</button>
             )}
         </form>

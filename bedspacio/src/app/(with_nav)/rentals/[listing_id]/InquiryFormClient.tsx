@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import SubmitInquiry from './SubmitInquiry';
+import SubmitCrmLead from './SubmitCrmLead';
 import { ODOO_BASE_URL } from '@/config/config';
 
 export type InquiryFormValues = {
@@ -63,15 +63,20 @@ export default function InquiryFormClient ({
 
         try {
 
-            // Fake loading of 2.5 seconds
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // Fake loading of 1.5 seconds
+            await new Promise(resolve => setTimeout(resolve, 1500));
 
-            const result = await SubmitInquiry(data) 
+            const result = await SubmitCrmLead(data);
 
-            if (!result || !result.success) {
-                setError(result?.message || 'Something went wrong');
+            if (!result?.success) {
+                setError(
+                    result?.message ||
+                    'Something went wrong'
+                );
                 return;
             }
+
+            console.log(result)
 
             setIsSubmitted(true)
             setPayload(data)
@@ -250,7 +255,9 @@ export default function InquiryFormClient ({
 
 
             {loading ? (
-                <div className='flex items-center justify-center p-[2rem] bg-[#C7EEFF] w-full'>Loading...</div>
+                <div className='flex items-center justify-center p-[2rem] bg-[#C7EEFF] w-full'>
+                    <img src="/loading/loading.gif" alt="loading" className='w-[50px] h-[50px]'/>
+                </div>
             ) : ( 
                 isSubmitSuccessful && payload && !reserveOpen && (
                 <div className='flex flex-col items-center bg-[#C7EEFF] gap-2 p-4 py-5 w-full'>

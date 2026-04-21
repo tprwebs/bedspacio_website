@@ -23,8 +23,7 @@ export async function searchRead({
 
     const response = await odoo.call(`/json/2/${model}/search_read`, payload);
 
-
-    console.log('SearchRead Response: ', response.data)
+    console.log('SearchRead Response: ', response)
     return response.data;
 }
 
@@ -100,3 +99,32 @@ export async function createInquiryRecord({
         throw err;
     }
 };
+
+
+export async function createCrmRecord ({
+    model,
+    values
+}) {
+    try {
+        const odoo = await getOdooClient();
+    
+        const path = `/json/2/${model}/create`;
+        const body = {
+            vals_list: [
+                values 
+            ]
+        }
+    
+        const result = await odoo.call(path, body);
+    
+        if (!result) {
+            throw new Error('Unable to proceed with inquiry.');
+        }
+        
+        return result.data || result;
+
+    } catch (err) {
+        console.error('Create Record failed: ', err);
+        throw err;
+    }
+}
