@@ -37,7 +37,7 @@ app.use(cors({
 }));
 // app.set('trust proxy', true); // uncomment later when deployed
 
-// used for postres
+// used for postgres
 // file uploads for branch image, room image, and profile image
 app.use('/file', express.static('file'));
 
