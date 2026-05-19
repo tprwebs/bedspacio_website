@@ -13,6 +13,7 @@ import ErrorToast from '@/components/admin/Toast/ErrorToast';
 import SuccessToast from '@/components/admin/Toast/SuccessToast';
 import DeleteToast from '@/components/admin/Toast/DeleteToast';
 import AlertTaost from '@/components/admin/Toast/AlertToast';
+import { BASE_URL } from "@/config/config";
 
 export type ManageType = {
     id: number,
@@ -31,6 +32,7 @@ export type ManageProps = {
 
 export default function Manage ({ users }: ManageProps) {
 
+
     const [ userWrapperModalOpen, setUserWrapperModal ] = useState<boolean>(false)
     const [ userViewWrapperModalOpen, setUserViewWrapperModal ] = useState<boolean>(false)
     const [ selectedUser, setSelectedUser ] = useState<UserInfo>();
@@ -40,7 +42,9 @@ export default function Manage ({ users }: ManageProps) {
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [deleteMessage, setDeleteMessage] = useState<string>('')
 
-    console.log('see users: ', users);
+
+
+
 
     const handleShowUserInfo = async (id: number) => {
         const data = await getUserInfo(id);
@@ -123,7 +127,7 @@ export default function Manage ({ users }: ManageProps) {
 
             {deleteMessage && <DeleteToast message={deleteMessage} />}
             {successMessage && <SuccessToast message={successMessage} />}
-            {errorMessage && <SuccessToast message={errorMessage} />}
+            {errorMessage && <ErrorToast message={errorMessage} />}
         </>
     )
 }

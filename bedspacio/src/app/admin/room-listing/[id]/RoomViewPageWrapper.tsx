@@ -3,7 +3,13 @@
 import { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "@/config/config";
+import { useRouter } from "next/navigation";
+
+// icons
 import Remove from '@/asset/icon/delete.svg'
+import MenuDots from '@/asset/icon/menu-three-dots.svg'
+import Delete from '@/asset/icon/delete.svg'
+
 import GalleryViewer from "./GalleryViewer";
 import InclusionSelectionViewWrapper from "./InclusionSelectectionViewWrapper";
 
@@ -14,6 +20,8 @@ import BranchSelectionViewWrapper from "./BranchSelectionViewWrapper";
 
 import SuccessToast from "@/components/admin/Toast/SuccessToast";
 import ErrorToast from "@/components/admin/Toast/ErrorToast";
+import DeleteToast from "@/components/admin/Toast/DeleteToast";
+import ConfirmWindow from "@/components/admin/Toast/ConfirmWindow";
 
 
 type PaymentTerms = {
@@ -38,6 +46,7 @@ export default function RoomViewPageWrapper ({room, inclusions, branches }: Room
 
     console.log('Room Data: ', room);
     console.log('Room inclusions: ', room.inclusions);
+    const router = useRouter();
 
     const [title, setTitle] = useState<string>(room?.title);
     const [price, setPrice] = useState<string>(room?.price);
@@ -61,6 +70,10 @@ export default function RoomViewPageWrapper ({room, inclusions, branches }: Room
 
     const [selectedBranch, setSelectedBranch] = useState<number>(room.branch_id);
     const [selectedInclusions, setSelectedInclusions] = useState<number[]>(room.inclusions.map(inc => Number(inc.id)));
+
+    const [deleteMessage, setDeleteMessage] = useState<string>('')
+    const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
+    const [confirmOpen, setConfirmOpen] = useState<boolean>(false);
 
     const [images, setImages] = useState<RoomImage[]>(
         room.images.map(img => ({
@@ -230,11 +243,82 @@ export default function RoomViewPageWrapper ({room, inclusions, branches }: Room
     };
 
 
+    const handleDeleteRoom = async (id: number) => {
+        try {
+
+            const deleted_room = await axios.delete(
+                `${BASE_URL}/room/v1/${id}/info`, {
+                    withCredentials: true
+                }
+            );
+
+            if (deleted_room?.data?.success === true) {
+                setDeleteMessage('Deleted room successfully');
+
+                setTimeout(() => {
+                    router.push('/admin/room-listing?page=1');
+                }, 3500);
+            }
+            
+        } catch (err) {
+            console.error('Failed to delete room: ', err);
+            setError('Error deleting this room');
+
+            setTimeout(() => setError(''), 3500)
+        }
+    }
+
+
+    const changesMade = 
+        title !== room.title ||
+        description !== room.description ||
+        Number(price) !== Number(room.price) ||
+        typeSelected !== room.type ||
+        genderSelected !== room.gender ||
+        capacity !== room.capacity ||
+        slot !== room.slot ||
+        selectedBranch !== room.branch_id ||
+        JSON.stringify(paymentTermPair) !==
+        JSON.stringify(room.payment_term) ||
+        JSON.stringify(selectedInclusions.sort()) !==
+        JSON.stringify(
+            room.inclusions.map((inc) => Number(inc.id)).sort()
+        );
+
+
+
     return (
         <>
+            {deleteMessage && (
+                <div className="bg-[#1D242B]/50 inset-0 fixed z-20"/>
+            )}
+
+            
             <div className="flex w-full min-h-screen">
                 <div className="flex flex-col items-start w-full px-[8rem] py-[1rem]">
-                    <span className="text-[28px] text-[#1D242B] font-[900]">{room.room_uuid}</span>
+
+                    <div className="flex items-center justify-between w-full">
+                        <span className="text-[28px] text-[#1D242B] font-[900]">Room ID: {room.room_uuid}</span>
+
+                        <div className="flex items-center gap-2">
+                            <div className=" relative flex">
+                                <button onClick={() => setDeleteOpen(prev => !prev)} className="flex items-center bg-[#1D242B]/15 hover:bg-[#1D242B]/30 active:bg-[#1D242B]/15 cursor-pointer rounded-[10px] p-1 transition-all duration-100">
+                                    <MenuDots className="w-[18px] h-[18px] fill-[#1D242B]" />
+                                    <span className="text-md text-[#1D242B] font-bold pr-2">Menu</span>
+                                </button>
+
+                                {deleteOpen && (
+                                    <div className="absolute top-9 right-0 bg-[#FAFAFA] flex flex-col gap-1 p-2 border border-[#1D242B]/30 rounded-[15px]">
+                                        <button onClick={() => setConfirmOpen(true)} className="flex items-center gap-2 rounded-[10px] border border-[#FF0808]/25 bg-[#FF0808]/10 cursor-pointer hover:bg-[#FF0808]/20 active:bg-[#FF0808]/10 p-1 transition-all duration-100">
+                                            <Delete className="w-[25px] h-[25px] stroke-[#FF0808] stroke-2" /> 
+                                            <span className="whitespace-nowrap pr-2 text-[#FF0808]/75 font-bold">Delete room</span>
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                            
+                        </div>
+                    </div>
 
 
                     <div className="grid grid-cols-[2fr_3fr] w-full h-auto py-[1rem] gap-[1rem]">
@@ -263,7 +347,7 @@ export default function RoomViewPageWrapper ({room, inclusions, branches }: Room
                                 <span>Description</span>
                                 <textarea name="description" id="room_description" rows={5} placeholder="Enter description here..."
                                 value={description} onChange={(e) => setDescription(e.target.value)}
-                                className="w-full p-2 border border-[#1D242B]/25 rounded-[10px] focus:outline-[#0077C0]"></textarea>
+                                className="w-full p-2 border border-[#1D242B]/25 rounded-[10px] focus:outline-[#0077C0] whitespace-pre-wrap"></textarea>
                             </div>
 
                             <div className="flex items-center w-full gap-2">
@@ -455,16 +539,37 @@ export default function RoomViewPageWrapper ({room, inclusions, branches }: Room
                         </div>
                     </div>
 
-                    <div className="flex items-center w-full items-end justify-end gap-1">
-                        <button onClick={() => handleRoomChange(room.id)} className="flex items-center px-4 py-2 border-2 border-[#0077C0] bg-[#0077C0] text-[#FAFAFA] font-bold rounded-[10px] cursor-pointer">Save Changes</button>
-                        <button className="flex items-center px-4 py-2 border-2 border-[#0077C0] text-[#0077C0] font-bold rounded-[10px] cursor-pointer">Cancel</button>
-                    </div>
+                    {changesMade && (
+                        <div className="flex items-center w-full items-end justify-end gap-1">
+                            <button onClick={() => handleRoomChange(room.id)} className="flex items-center px-4 py-2 border-2 border-[#0077C0] bg-[#0077C0] text-[#FAFAFA] font-bold rounded-[10px] cursor-pointer">Save Changes</button>
+                            <button className="flex items-center px-4 py-2 border-2 border-[#0077C0] text-[#0077C0] font-bold rounded-[10px] cursor-pointer">Cancel</button>
+                        </div>
+                    )}
                 </div>
             </div>
 
 
-            {error && <ErrorToast message={error} />}
-            {successMessage && <SuccessToast message={successMessage} />}
+            <div className="fixed flex z-50">
+                {error && <ErrorToast message={error} />}
+                {successMessage && <SuccessToast message={successMessage} />}
+                {deleteMessage && <DeleteToast message={deleteMessage} />}
+            </div>
+
+
+            {confirmOpen && (
+                <ConfirmWindow 
+                    title={'Delete Room'}
+                    message={`You are about to delete the room with Room ID: ${room?.room_uuid}. Do you want to proceed?`}
+                    onCancel={() => {
+                        setConfirmOpen(false)
+                        setDeleteOpen(false)
+                    }}
+                    onConfirm={ () => {
+                        setConfirmOpen(false);
+                        handleDeleteRoom(room?.id)
+                    }}
+                />
+            )}
         </>
     )
 }

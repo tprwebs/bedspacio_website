@@ -10,7 +10,6 @@ interface BranchSelectionProp {
 }
 
 export default function BranchSelectionWrapper ({ branches, selectedBranch, setSelectedBranch }: BranchSelectionProp) {
-    const [branchSelected, setBranchSelected] = useState<number>(Number(selectedBranch))
 
     console.log('Branch: ', branches);
 
@@ -24,7 +23,7 @@ export default function BranchSelectionWrapper ({ branches, selectedBranch, setS
                 <span>Branch</span>
 
                 {/* Will map all branch later on */}
-                <select name="branch" id="branch_selection" value={branchSelected}
+                <select name="branch" id="branch_selection" value={Number(selectedBranch) ?? ""}
                 onChange={(e) => setSelectedBranch(Number(e.target.value))}
                 className="w-full p-2 border border-[#1D242B]/50 bg-[#FAFAFA] rounded-[10px] focus:outline-[#0077C0] font-bold">
                     <option hidden>Select branch</option>

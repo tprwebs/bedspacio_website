@@ -278,7 +278,7 @@ export default async function RoomDetails ({ params }: Props ) {
 
                         <div className="flex flex-col items-start gap-[1rem] w-full pt-[1rem] border-t border-t-[#1D242B]/50">
                             <span className="text-[20px] text-[#1D242B] font-[900]">Description</span>
-                            <p className="text-[18px] text-[#1D242B]">{`${room.description}`}</p>
+                            <p className="text-[18px] text-[#1D242B] whitespace-pre-wrap">{`${room.description}`}</p>
                         </div>
 
                         <div className="flex flex-col items-start gap-[1rem] w-full">

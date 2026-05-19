@@ -86,6 +86,7 @@ export default function UserViewWrapperModal ({ isModalOpen, user, onSuccess, su
             isModalOpen();
         } catch (err) {
             console.error('Failed to delete user: ', err)
+            
             errorMessage('Delete failed');
 
             setTimeout(() => errorMessage(''), 3500);
@@ -130,7 +131,23 @@ export default function UserViewWrapperModal ({ isModalOpen, user, onSuccess, su
 
 
         } catch (err) {
-            console.error();
+            // console.error('Error updating user: ', err);
+            if (axios.isAxiosError(err) && err.response?.status === 409) {
+                const branches = err.response.data?.branches || [];
+
+                const branchNames = branches
+                    .map((branch: { name: string }) => branch.name)
+                    .join(', ');
+
+                errorMessage(
+                    `${err.response.data.message}: ${branchNames}`
+                );
+
+                setTimeout(() => errorMessage(''), 5000);
+                isModalOpen();
+                return;
+            }
+
             errorMessage('Update error');
             setTimeout(() => errorMessage(''), 3500);
 

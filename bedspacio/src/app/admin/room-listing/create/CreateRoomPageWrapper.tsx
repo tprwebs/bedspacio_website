@@ -406,8 +406,11 @@ export default function CreateRoomPageWrapper ({ inclusions, branches }: RoomPro
                             </div>
 
                             <div className="flex flex-col items-center w-full p-[1rem] border-dashed border-2 border-[#1D242B]/25 rounded-[10px] gap-2">
-                                <span className="text-[14px] text-[#1D242B] font-bold">Inclusions</span>
-
+                                <div className="flex flex-col items-center gap-1">
+                                    <span className="text-[14px] text-[#1D242B] font-bold">Inclusions</span>
+                                    <span className="text-[14px] text-[#1D242B] italic">(Select all that applies)</span>
+                                </div>
+                                
                                 {/* Selection of Property Manager and Branch */}
                                 <InclusionSelectionWrapper 
                                     inclusions={inclusions}

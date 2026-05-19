@@ -304,30 +304,64 @@ userRoute.patch('/v1/users/:id', requireAuth, async (req, res) => {
         }
 
         const user = await db.oneOrNone(
-            `SELECT COUNT(*) FROM users WHERE id = $1`,
+            `SELECT * FROM users WHERE id = $1`,
             [id]
         );
 
         if (!user) {
-            return res.status(400).json({
+            return res.status(404).json({
                 message: 'User not found'
-            })
-        };
+            });
+        }
 
         const { ...userUpdates } = req.body; 
+
+        const assignedBranches = await db.any(
+            `SELECT id, name
+            FROM branches
+            WHERE property_manager_id = $1`,
+            [id]
+        );
+
+        const hasBranches = assignedBranches.length > 0;
+
+        // block deactivation
+        if (
+            user.role === 'property_manager' &&
+            userUpdates.is_active === false &&
+            hasBranches
+        ) {
+            return res.status(409).json({
+                message: 'Reassign branches before deactivating this manager',
+                branches: assignedBranches
+            });
+        }
+
+        // block role change
+        if (
+            user.role === 'property_manager' &&
+            userUpdates.role === 'admin' &&
+            hasBranches
+        ) {
+            return res.status(409).json({
+                message: 'Reassign branches before changing role',
+                branches: assignedBranches
+            });
+        }
 
         if (Object.keys(userUpdates).length > 0) {
             const keys = Object.keys(userUpdates);
 
             const setUserClause = keys 
-                .map((map, index) => `${keys} = $${index + 1}`)
+                .map((key, index) => `${key} = $${index + 1}`)
                 .join(', ');
 
             const values = keys.map(key => userUpdates[key]);
 
             await db.oneOrNone(
                 `UPDATE users 
-                SET ${setUserClause}
+                SET ${setUserClause},
+                    updated_at = CURRENT_TIMESTAMP
                 WHERE id = $${keys.length + 1}
                 RETURNING *`,
                 [...values, id]

@@ -786,6 +786,73 @@ roomRoute.patch(
 
 
 
+roomRoute.delete('/v1/:id/info', requireAuth, async (req, res) => {
+    try {
+
+        const id = Number(req.params.id);
+        const room = await db.one(
+            `SELECT EXISTS(
+                SELECT 1 FROM rooms WHERE id = $1
+            ) AS exists`,
+            [id]
+        );
+
+        if (!room.exists) {
+            return res.status(404).json({
+                success: false,
+                message: 'Room not found'
+            });
+        }
+
+
+        const room_images = await db.manyOrNone(
+            `SELECT * FROM room_images WHERE room_id = $1`,
+            [id]
+        );
+
+        for (const images of room_images) {
+            const old_images = path.join(
+                process.cwd(),
+                'file/room/image',
+                images.image_url
+            );
+
+            try {
+                await fs.unlink(old_images);
+                console.log('Image deleted: ', old_images);
+            } catch (err) {
+                console.log('Failed to delete image: ', err.message);
+            }
+        }
+        
+        await db.none(
+            `DELETE FROM room_images WHERE room_id = $1`,
+            [id]
+        )
+        
+        await db.none(
+            `DELETE FROM rooms WHERE id = $1`,
+            [id]
+        )
+
+
+
+        return res.status(200).send({
+            success: true,
+            message: 'Room deleted successfully'
+        })
+
+    } catch (err) {
+        console.error('Error deleting room: ', err);
+
+        return res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+        });
+    }
+})
+
+
 roomRoute.get('/v1/admin/all', async (req, res) => {
     try {
 

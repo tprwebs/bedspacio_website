@@ -78,10 +78,14 @@ export default function InquiryModalWrapper ({ modalOpen, inquiry, onSuccess }: 
                             <div className="flex items-center justify-between w-full py-2 px-3 rounded-[10px] border border-[#1D242B]/25">
                                 <span className="w-full">{inquiry.room_uuid}</span>
                                 
-                                <Link href={`/admin/room-listing/${Number(inquiry.room_id)}`} target={'_blank'} className="flex items-center whitespace-nowrap text-[14px] text-[#1D242B]/90 font-bold opacity-50 hover:opacity-100 active:opacity-75 cursor-pointer">
-                                    <span className="px-2">Check room</span>
-                                    <Arrow className="w-[22px] h-[22px] fill-none" />
-                                </Link>
+                                {inquiry.room_id ? (
+                                    <Link href={`/admin/room-listing/${Number(inquiry.room_id)}`} target={'_blank'} className="flex items-center whitespace-nowrap text-[14px] text-[#1D242B]/90 font-bold opacity-50 hover:opacity-100 active:opacity-75 cursor-pointer">
+                                        <span className="px-2">Check room</span>
+                                        <Arrow className="w-[22px] h-[22px] fill-none" />
+                                    </Link>
+                                ) : (
+                                    <span className=" cursor-not-allowed whitespace-nowrap text-[14px] text-[#1D242B]/90 font-bold opacity-50">Room deleted</span>
+                                )}
                             </div>
                         </div>
 
