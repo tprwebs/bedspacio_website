@@ -63,7 +63,7 @@ export default function Manage ({ users }: ManageProps) {
     return (
         <>
             <div className="flex w-full min-h-screen">
-                <div className="flex flex-col w-full px-[8rem] py-[2rem] gap-[3rem]">
+                <div className="flex flex-col w-full px-[1rem] xl:px-[8rem] py-[2rem] gap-[3rem]">
 
                     <div className="flex items-center justify-between w-full">
                         <span className="text-[28px] text-[#1D242B] font-bold leading-tight">Manage</span>

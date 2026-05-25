@@ -94,7 +94,7 @@ export default function BranchPageWrapper ({ branches: initialBranches }: branch
     return (
         <>
             <div className="flex w-full min-h-screen">
-                <div className="flex flex-col w-full h-auto px-[8rem] py-[1rem] gap-[2rem]">
+                <div className="flex flex-col w-full h-auto px-[1rem] xl:px-[8rem] lg:px-[1rem] py-[1rem] gap-[2rem]">
                     
                     <div className="flex items-center justify-between w-full">
                         <span className="text-[28px] text-[#1D242B] font-bold">Branch</span>
@@ -105,7 +105,7 @@ export default function BranchPageWrapper ({ branches: initialBranches }: branch
                         </button>
                     </div>
 
-                    <div className="grid grid-cols-5 w-full gap-2">
+                    <div className="grid grid-cols-4 xl:grid-cols-5 w-full gap-2">
                         {/* Block */}
                         {branches.map((branch: branchType) => (
                             <BranchCardWrapper 

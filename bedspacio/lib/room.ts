@@ -86,17 +86,52 @@ export const getInclusions = cache(async () => {
 
 // From database
 
-export const getRooms = async (page: number) => {
+// export const getRooms = async (page: number) => {
+//     try {
+//         const response = await axios.get(`${BASE_URL}/room/v1/admin/all?page=${page}`, {
+//             withCredentials: true
+//         });
+
+//         return response.data ?? [];
+//     } catch (err) {
+//         console.error('Error retrieving rooms: ', err)
+//     }
+// }
+
+export const getRooms = async ({
+    page,
+    branch,
+    type,
+    search
+}: {
+    page: number;
+    branch?: string;
+    type?: string;
+    search?: string;
+}) => {
     try {
-        const response = await axios.get(`${BASE_URL}/room/v1/admin/all?page=${page}`, {
+        const response = await axios.get(`${BASE_URL}/room/v1/admin/all`, {
+            params: {
+                page,
+                branch,
+                type,
+                search
+            },
             withCredentials: true
         });
 
-        return response.data ?? [];
+        return response.data;
     } catch (err) {
-        console.error('Error retrieving rooms: ', err)
+        console.error('Error retrieving rooms: ', err);
+        return {
+            data: [],
+            currentPage: 1,
+            totalPage: 1
+        };
     }
-}
+};
+
+
 
 export const getRoomById = async (id: number) => {
     try {

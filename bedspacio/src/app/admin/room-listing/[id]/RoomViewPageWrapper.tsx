@@ -22,6 +22,7 @@ import SuccessToast from "@/components/admin/Toast/SuccessToast";
 import ErrorToast from "@/components/admin/Toast/ErrorToast";
 import DeleteToast from "@/components/admin/Toast/DeleteToast";
 import ConfirmWindow from "@/components/admin/Toast/ConfirmWindow";
+import Link from "next/link";
 
 
 type PaymentTerms = {
@@ -295,7 +296,7 @@ export default function RoomViewPageWrapper ({room, inclusions, branches }: Room
 
             
             <div className="flex w-full min-h-screen">
-                <div className="flex flex-col items-start w-full px-[8rem] py-[1rem]">
+                <div className="flex flex-col items-start w-full px-[1rem] xl:px-[8rem] py-[1rem]">
 
                     <div className="flex items-center justify-between w-full">
                         <span className="text-[28px] text-[#1D242B] font-[900]">Room ID: {room.room_uuid}</span>
@@ -541,8 +542,8 @@ export default function RoomViewPageWrapper ({room, inclusions, branches }: Room
 
                     {changesMade && (
                         <div className="flex items-center w-full items-end justify-end gap-1">
-                            <button onClick={() => handleRoomChange(room.id)} className="flex items-center px-4 py-2 border-2 border-[#0077C0] bg-[#0077C0] text-[#FAFAFA] font-bold rounded-[10px] cursor-pointer">Save Changes</button>
-                            <button className="flex items-center px-4 py-2 border-2 border-[#0077C0] text-[#0077C0] font-bold rounded-[10px] cursor-pointer">Cancel</button>
+                            <button onClick={() => handleRoomChange(room.id)} className="flex items-center px-4 py-2 border-2 border-[#0077C0] bg-[#0077C0]/75 hover:bg-[#0077C0] active:bg-[#0077C0]/75 text-[#FAFAFA] font-bold rounded-[10px] cursor-pointer">Save Changes</button>
+                            <Link href={'/admin/room-listing'} className="flex items-center px-4 py-2 border-2 border-[#0077C0] hover:bg-[#0077C0]/15 active:bg-[#FAFAFA] text-[#0077C0] font-bold rounded-[10px] cursor-pointer">Cancel</Link>
                         </div>
                     )}
                 </div>

@@ -6,12 +6,12 @@ import { useState } from "react";
 interface Props {
     count: number;
     ids: number[];
-    onArchive: () => void;
+    onRestore: () => void;
     onConfirm: () => void;
     onCancel: () => void;
 }
 
-export default function WindowDeleteMultiple ({ count, ids, onArchive, onConfirm, onCancel }: Props) {
+export default function WindowArchivesAction ({ count, ids, onRestore, onConfirm, onCancel }: Props) {
 
     
 
@@ -25,8 +25,8 @@ export default function WindowDeleteMultiple ({ count, ids, onArchive, onConfirm
                         <button onClick={onConfirm} className="bg-[#FF0808]/75 hover:bg-[#8F0808]/75 active:bg-[#FF0808]/75 cursor-pointer rounded-[10px] py-1 px-2 font-bold">
                             <span className="text-[#FAFAFA] text-[14px]">Delete</span>
                         </button>
-                        <button onClick={onArchive} className="bg-[#1D242B]/75 hover:bg-[#1D242B]/90 active:bg-[#1D242B]/75 cursor-pointer rounded-[10px] py-1 px-2 font-bold">
-                            <span className="text-[#FAFAFA] text-[14px]">Archive</span>
+                        <button onClick={onRestore} className="bg-[#087037]/75 hover:bg-[#087037]/90 active:bg-[#087037]/75 cursor-pointer rounded-[10px] py-1 px-2 font-bold">
+                            <span className="text-[#FAFAFA] text-[14px]">Restore</span>
                         </button>
                         <button onClick={onCancel} className="bg-[#1D242B]/25 hover:bg-[#1D242B]/50 active:bg-[#1D242B]/25 cursor-pointer rounded-[10px] py-1 px-2 font-bold">
                             <span className="text-[#1D242B] text-[14px]">Cancel</span>

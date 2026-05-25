@@ -239,7 +239,7 @@ export default function CreateRoomPageWrapper ({ inclusions, branches }: RoomPro
     return (
         <>
             <div className="flex w-full min-h-screen">
-                <div className="flex flex-col items-start w-full px-[8rem] py-[1rem]">
+                <div className="flex flex-col items-start w-full px-[1rem] xl:px-[8rem] py-[1rem]">
                     <span className="text-[28px] text-[#1D242B] font-[900]">Create New Listing</span>
 
 

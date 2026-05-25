@@ -853,6 +853,9 @@ roomRoute.delete('/v1/:id/info', requireAuth, async (req, res) => {
 })
 
 
+
+// GET REQUEST WITH NO SEARCH PARAMS FOR room_uuid, title, branch and type of room
+/*
 roomRoute.get('/v1/admin/all', async (req, res) => {
     try {
 
@@ -903,6 +906,75 @@ roomRoute.get('/v1/admin/all', async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' })
     }
 })
+*/
+
+roomRoute.get('/v1/admin/all', async (req, res) => {
+    try {
+
+        const branch = req.query.branch;
+        const type = req.query.type;
+        const search = req.query.search;
+
+        const page = Number(req.query.page) || 1;
+        const limit = 10;
+        const offset = (page - 1) * limit;
+
+        const rooms = await db.manyOrNone(
+            `
+            SELECT
+                r.id,
+                r.room_uuid,
+                r.title,
+                r.branch_id,
+                r.type,
+                r.slot,
+                r.price,
+                br.name as branch
+            FROM rooms r
+            JOIN branches br ON br.id = r.branch_id
+            WHERE 
+                ($1::text IS NULL OR br.name = $1)
+                AND ($2::text IS NULL OR r.type = $2)
+                AND (
+                    $3::text IS NULL OR
+                    r.room_uuid ILIKE '%' || $3 || '%' OR
+                    r.title ILIKE '%' || $3 || '%'
+                )
+            ORDER BY r.created_at DESC
+            LIMIT $4 OFFSET $5;
+            `,
+            [branch || null, type || null, search || null, limit, offset]
+        );
+
+        const totalRooms = await db.one(
+            `
+            SELECT COUNT(*) FROM rooms r
+            JOIN branches br ON br.id = r.branch_id
+            WHERE 
+                ($1::text IS NULL OR br.name = $1)
+                AND ($2::text IS NULL OR r.type = $2)
+                AND (
+                    $3::text IS NULL OR
+                    r.room_uuid ILIKE '%' || $3 || '%' OR
+                    r.title ILIKE '%' || $3 || '%'
+                )
+            `,
+            [branch || null, type || null, search || null]
+        );
+
+        const totalPage = Math.ceil(Number(totalRooms.count) / limit);
+
+        return res.status(200).json({
+            data: rooms,
+            currentPage: page,
+            totalPage
+        });
+
+    } catch (err) {
+        console.error('Error retrieving rooms: ', err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 
 // QUERY for single room

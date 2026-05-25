@@ -19,6 +19,7 @@ import branchRoute from './src/routes/branch.routes.js';
 import managerRoute from './src/routes/manager.routes.js';
 import inclusionRoute from './src/routes/inclusion.routes.js';
 import inquiryRoutes from './src/routes/inquiry.routes.js';
+import dashboardRoute from './src/routes/dashboard.routes.js';
 
 
 // used for postgres
@@ -71,6 +72,7 @@ app.use('/branch', branchRoute);
 app.use('/manager', managerRoute);
 app.use('/inclusion', inclusionRoute);
 app.use('/inquiry', inquiryRoutes);
+app.use('/dashboard', dashboardRoute)
 
 
 app.get('/', (req, res) => {

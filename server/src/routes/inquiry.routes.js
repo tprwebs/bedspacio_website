@@ -7,6 +7,8 @@ import { extractOdooError } from '../utils/errorExtract.js';
 import { rateLimitMiddleware, inquiryLimiter } from '../middleware/rateLimit.js';
 import { requireAuth } from '../middleware/auth.js';
 
+import { customAlphabet } from 'nanoid';
+
 const ODOO_URL = process.env.ODOO_URL;
 const inquiryRoutes = express.Router();
 
@@ -276,9 +278,76 @@ inquiryRoutes.post('/v1/crm-record/lead', rateLimitMiddleware, async (req, res) 
 
 // FROM POSTGRES
 
-inquiryRoutes.post('/v1/room-inquiry', rateLimitMiddleware,  async (req, res) => {
+// inquiryRoutes.post('/v1/room-inquiry', rateLimitMiddleware,  async (req, res) => {
+//     try {
+//         const { 
+//             room_uuid,
+//             expected_revenue,
+//             fullname,
+//             email,
+//             contact_number,
+//             schedule,
+//             target_move_in,
+//             months_of_stay,
+//             message,
+//             type = 'room_inquiry',
+//             status = 'pending'
+//         } = req.body;
+
+//         const ip_address = req.ip;
+
+//         const inquiry = await db.one(
+//             `
+//                 INSERT INTO inquiries (
+//                     room_uuid, 
+//                     expected_revenue,
+//                     fullname,
+//                     email,
+//                     contact_number,
+//                     schedule,
+//                     target_move_in,
+//                     months_of_stay,
+//                     message,
+//                     ip_address,
+//                     type,
+//                     status
+//                 ) VALUES (
+//                     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+//                 ) RETURNING id
+//             `, [
+//                 room_uuid,
+//                 expected_revenue,
+//                 fullname,
+//                 email,
+//                 contact_number,
+//                 schedule,
+//                 target_move_in,
+//                 months_of_stay,
+//                 message,
+//                 ip_address,
+//                 type,
+//                 status
+//             ]
+//         );
+
+//         console.log(inquiry)
+
+//         return res.status(200).json(inquiry)
+
+//     } catch (err) {
+//         console.log('Error creating inquiry data: ', err);
+//         return res.status(500).json({
+//             success: false,
+//             message: "Internal server error"
+//         });
+//     }
+// });
+
+inquiryRoutes.post('/v1/room-inquiry', rateLimitMiddleware, async (req, res) => {
+
     try {
-        const { 
+
+        const {
             room_uuid,
             expected_revenue,
             fullname,
@@ -294,10 +363,20 @@ inquiryRoutes.post('/v1/room-inquiry', rateLimitMiddleware,  async (req, res) =>
 
         const ip_address = req.ip;
 
-        const inquiry = await db.one(
-            `
+        const nanoid = customAlphabet(
+            'ABCDEFGHJKLMNPQRSTUVWXYZ23456789',
+            8
+        );
+
+        const reference_number = `INQ-${nanoid()}`;
+
+        const result = await db.tx(async t => {
+
+            // STEP 1: Insert inquiry
+            const inquiry = await t.one(
+                `
                 INSERT INTO inquiries (
-                    room_uuid, 
+                    room_uuid,
                     expected_revenue,
                     fullname,
                     email,
@@ -311,35 +390,62 @@ inquiryRoutes.post('/v1/room-inquiry', rateLimitMiddleware,  async (req, res) =>
                     status
                 ) VALUES (
                     $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
-                ) RETURNING id
-            `, [
-                room_uuid,
-                expected_revenue,
-                fullname,
-                email,
-                contact_number,
-                schedule,
-                target_move_in,
-                months_of_stay,
-                message,
-                ip_address,
-                type,
-                status
-            ]
-        );
+                )
+                RETURNING id, created_at
+                `,
+                [
+                    room_uuid,
+                    expected_revenue,
+                    fullname,
+                    email,
+                    contact_number,
+                    schedule,
+                    target_move_in,
+                    months_of_stay,
+                    message,
+                    ip_address,
+                    type,
+                    status,
+                    reference_number
+                ]
+            );
 
-        console.log(inquiry)
+            // STEP 2: Update inquiry with reference number
+            const updatedInquiry = await t.one(
+                `
+                UPDATE inquiries
+                SET reference_number = $1
+                WHERE id = $2
+                RETURNING
+                    id,
+                    reference_number,
+                    created_at
+                `,
+                [reference_number, inquiry.id]
+            );
 
-        return res.status(200).json(inquiry)
+            return updatedInquiry;
+        });
+
+        return res.status(200).json({
+            success: true,
+            inquiry_id: result.id,
+            reference_number: result.reference_number,
+            expected_response_time: 'Within 24 hours'
+        });
 
     } catch (err) {
-        console.log('Error creating inquiry data: ', err);
+
+        console.error('Error creating inquiry:', err);
+
         return res.status(500).json({
             success: false,
-            message: "Internal server error"
+            message: 'Internal server error'
         });
     }
 });
+
+
 
 
 inquiryRoutes.post('/v1/general-inquiry', inquiryLimiter, async (req, res) => {
@@ -385,31 +491,151 @@ inquiryRoutes.post('/v1/general-inquiry', inquiryLimiter, async (req, res) => {
 })
 
 
+// inquiryRoutes.get('/v1', async (req, res) => {
+//     try {
+
+//         const status = req.query.status;
+
+//         const page = parseInt(req.query.page) || 1;
+//         const limit = 25;
+//         const offset = (page - 1) * limit;
+
+//         console.log('STATUS:', status);
+//         console.log('PAGE:', page);
+
+//         const result = await db.manyOrNone(
+//             `SELECT 
+//                 id,
+//                 type,
+//                 fullname,
+//                 email,
+//                 status,
+//                 created_at
+//             FROM inquiries 
+//             WHERE 
+//                 is_archived = false
+//                 AND ($1::text IS NULL OR status = $1)
+//             ORDER BY id ASC`,
+//             [ status || null ]
+//         )
+
+        
+
+//         return res.status(200).json({
+//             data: result,
+//             pagination: {
+//                 page,
+//                 limit,
+//                 total: countResult.total,
+//                 totalPages: Math.ceil(countResult.total / limit)
+//             }
+//         });
+
+//     } catch (err) {
+//         console.error('Error retrieving room inquiries: ', err);
+//         return res.status(500).json({
+//             message: 'Internal server error'
+//         })
+//     }
+// });
+
+
+
 inquiryRoutes.get('/v1', async (req, res) => {
     try {
+        const status = req.query.status;
+        const search = req.query.search; // 👈 NEW unified search
 
+        const page = parseInt(req.query.page) || 1;
+        const limit = 25;
+        const offset = (page - 1) * limit;
+
+        console.log('STATUS:', status);
+        console.log('SEARCH:', search);
+        console.log('PAGE:', page);
+
+        // MAIN QUERY (paginated)
         const result = await db.manyOrNone(
-            `SELECT 
+            `
+            SELECT 
                 id,
                 type,
+                reference_number,
                 fullname,
                 email,
+                contact_number,
+                room_uuid,
                 status,
                 created_at
-            FROM inquiries 
-            WHERE is_archived = false
-            ORDER BY id ASC`
-        )
+            FROM inquiries
+            WHERE 
+                is_archived = false
 
-        return res.status(200).json(result);
+                AND ($1::text IS NULL OR status = $1)
+
+                AND (
+                    $2::text IS NULL OR
+                    reference_number ILIKE '%' || $2 || '%' OR
+                    fullname ILIKE '%' || $2 || '%' OR
+                    contact_number ILIKE '%' || $2 || '%' OR
+                    room_uuid ILIKE '%' || $2 || '%'
+                )
+
+            ORDER BY id DESC
+            LIMIT $3 OFFSET $4
+            `,
+            [
+                status || null,
+                search || null,
+                limit,
+                offset
+            ]
+        );
+
+        // COUNT QUERY
+        const countResult = await db.one(
+            `
+            SELECT COUNT(*)::int AS total
+            FROM inquiries
+            WHERE 
+                is_archived = false
+
+                AND ($1::text IS NULL OR status = $1)
+
+                AND (
+                    $2::text IS NULL OR
+                    reference_number ILIKE '%' || $2 || '%' OR
+                    fullname ILIKE '%' || $2 || '%' OR
+                    contact_number ILIKE '%' || $2 || '%' OR
+                    room_uuid ILIKE '%' || $2 || '%'
+                )
+            `,
+            [
+                status || null,
+                search || null
+            ]
+        );
+
+        const totalPages = Math.ceil(countResult.total / limit);
+
+        return res.status(200).json({
+            data: result,
+            pagination: {
+                page,
+                limit,
+                total: countResult.total,
+                totalPages
+            }
+        });
 
     } catch (err) {
-        console.error('Error retrieving room inquiries: ', err);
+        console.error('Error retrieving inquiries:', err);
         return res.status(500).json({
             message: 'Internal server error'
-        })
+        });
     }
 });
+
 
 inquiryRoutes.get('/v1/details/:id', async (req, res) => {
     try {
@@ -614,10 +840,53 @@ inquiryRoutes.delete('/v1/multiple', requireAuth, async (req, res) => {
 });
 
 
+inquiryRoutes.delete('/v1/archive/multiple', requireAuth, async (req, res) => {
+    try {
+        const { ids } = req.body;
+
+        console.log('ids to delete on archives? : ', ids);
+
+        if (!Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Ids must be a non-empty array'
+            });
+        }
+
+        const archives = await db.any(
+            `SELECT id, status FROM inquiries WHERE id = ANY($1::int[]) AND is_archived = true`,
+            [ids]
+        );
+
+        const foundIds = archives.map(i => i.id);
+
+        if (foundIds.length > 0) {
+            await db.none(
+                `DELETE FROM inquiries WHERE id = ANY($1::int[]) AND is_archived = true`,
+                [foundIds]
+            );
+        }
+
+        return res.status(200).json({
+            success: true,
+            archived: foundIds
+        });
+
+    } catch (err) {
+        console.error('Error deleting inquiries: ', err);
+
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
+});
+
+
 
 inquiryRoutes.patch('/v1/archive/multiple', requireAuth, async (req, res) => {
     try {
-        const ids = req.body;
+        const { ids } = req.body;
 
         console.log('ids? : ', ids);
 
@@ -638,6 +907,51 @@ inquiryRoutes.patch('/v1/archive/multiple', requireAuth, async (req, res) => {
         if (foundIds.length > 0) {
             await db.none(
                 `UPDATE inquiries SET is_archived = true WHERE id = ANY($1::int[])`,
+                [foundIds]
+            );
+        }
+
+        return res.status(200).json({
+            success: true,
+            archived: foundIds
+        });
+
+    } catch (err) {
+        console.error('Error deleting inquiries: ', err);
+
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
+});
+
+
+
+
+inquiryRoutes.patch('/v1/unarchive/multiple', requireAuth, async (req, res) => {
+    try {
+        const { ids } = req.body;
+
+        console.log('ids? : ', ids);
+
+        if (!Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Ids must be a non-empty array'
+            });
+        }
+
+        const archives = await db.any(
+            `SELECT id, status FROM inquiries WHERE id = ANY($1::int[]) AND is_archived = true`,
+            [ids]
+        );
+
+        const foundIds = archives.map(i => i.id);
+
+        if (foundIds.length > 0) {
+            await db.none(
+                `UPDATE inquiries SET is_archived = false WHERE id = ANY($1::int[])`,
                 [foundIds]
             );
         }
@@ -968,6 +1282,7 @@ inquiryRoutes.patch('/v1/unarchive/:id', requireAuth, async (req, res) => {
 });
 
 
+
 // all archived inquiries
 inquiryRoutes.get('/v1/archived', async (req, res) => {
     try {
@@ -995,7 +1310,6 @@ inquiryRoutes.get('/v1/archived', async (req, res) => {
         })
     }
 });
-
 
 
 // check for the details of an archived inquiry based on ID

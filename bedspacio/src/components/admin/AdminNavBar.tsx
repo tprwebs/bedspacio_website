@@ -46,7 +46,7 @@ export default function AdminNavBar () {
 
 
     return (
-        <div className="sticky top-0 flex items-center justify-between bg-[#0077C0] px-[8rem] z-10">
+        <div className="sticky top-0 flex items-center justify-between bg-[#0077C0] px-[1rem] xl:px-[8rem] lg:px-[1rem] z-10">
             
             <section className="flex items-center">
                 <div className="flex w-full justify-start font-bold text-[28px] text-[#FAFAFA] border-r border-r-[#1D242B] whitespace-nowrap pr-[1rem]">BEDSPACIO ADMIN</div>
@@ -75,7 +75,7 @@ export default function AdminNavBar () {
 
                     <Link href="/admin/branch" className={`flex flex-col items-center justify-center p-2 xl:p-6 lg:p-6 whitespace-nowrap text-[#FAFAFA] font-bold hover:bg-[#1D242B]/25 transition-all duration-100  ${path === '/admin/branch' && 'bg-[#1D242B]'}`}> Branch </Link>
 
-                    <Link href="/admin/inquiry" className={`flex flex-col items-center justify-center p-2 xl:p-6 lg:p-6 whitespace-nowrap text-[#FAFAFA] font-bold hover:bg-[#1D242B]/25 transition-all duration-100  ${path === '/admin/inquiry' && 'bg-[#1D242B]'}`}>Inquiry</Link>
+                    <Link href="/admin/inquiry" className={`flex flex-col items-center justify-center p-2 xl:p-6 lg:p-6 whitespace-nowrap text-[#FAFAFA] font-bold hover:bg-[#1D242B]/25 transition-all duration-100  ${path.startsWith('/admin/inquiry') && 'bg-[#1D242B]'}`}>Inquiry</Link>
 
                     {user?.role === 'admin' && (
                         <Link href="/admin/manage" className={`flex flex-col items-center justify-center p-2 xl:p-6 lg:p-6 whitespace-nowrap text-[#FAFAFA] font-bold hover:bg-[#1D242B]/25 transition-all duration-100  ${path === '/admin/manage' && 'bg-[#1D242B]'}`}>Manage</Link>

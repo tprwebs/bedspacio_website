@@ -352,6 +352,9 @@ import { useForm } from 'react-hook-form';
 import SubmitInquiry from './SubmitInquiry';
 import { ODOO_BASE_URL } from '@/config/config';
 
+// icons
+import Check from '@/asset/icon/check-circle.svg'
+
 export type InquiryFormValues = {
     room_uuid: string,
     fullname: string,
@@ -360,9 +363,14 @@ export type InquiryFormValues = {
     schedule: string,
     target_move_in: string,
     months_of_stay: number,
-    message: string
+    message: string,
 }
 
+type InquirySubmissionResponse = {
+    inquiry_id: number;
+    reference_number: string;
+    expected_response_time: string;
+}
 
 type PropertyManagerInfo = {
     slot: number,
@@ -391,6 +399,8 @@ export default function InquiryFormClient ({
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false)
 
+    const [submissionData, setSubmissionData] = useState<InquirySubmissionResponse | null>(null);
+
     const { register, handleSubmit, reset, formState: { errors, isSubmitSuccessful } } = useForm<InquiryFormValues>();
     console.log('Starting price:', typeof startingPrice)
 
@@ -401,8 +411,13 @@ export default function InquiryFormClient ({
         setLoading(true);
         setError('');
         setIsSubmitted(false);
-
+ 
         try {
+
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
 
             // Fake loading of 1.5 seconds
             await new Promise(resolve => setTimeout(resolve, 1500));
@@ -423,7 +438,16 @@ export default function InquiryFormClient ({
 
             setIsSubmitted(true)
             setPayload(data)
+
+            setSubmissionData({
+                inquiry_id: result.data.inquiry_id,
+                reference_number: result.data.reference_number,
+                expected_response_time: result.data.expected_response_time
+            });
+
             reset();
+
+            
 
         } catch (err: any) {
             console.error('Error submitting inquiry: ', err);
@@ -610,7 +634,29 @@ export default function InquiryFormClient ({
                 isSubmitted && payload && !reserveOpen && (
                 <div className='flex flex-col items-center bg-[#C7EEFF] gap-2 p-4 py-5 w-full'>
                     <div  className='flex flex-col items-center w-full bg-[#FAFAFA] p-4 gap-2 rounded-[15px]'>
-                        <span className='font-bold text-[22px] text-left'>Submission details:</span>
+
+                        <div className='flex items-center gap-2'>
+                            <span className='font-bold text-[22px] text-[#007C00] text-left'>Inquiry   Successfully Sent</span>
+                            <Check className="w-[40px] h-[40px]" />
+                        </div>
+
+                        <div className='flex items-center justify-between w-full border-b border-dashed border-[#1D242B]/25'>
+                            <span>Reference Number:</span>
+                            <span className='text-[#0077C0] font-bold'>
+                                {submissionData?.reference_number}
+                            </span>
+                        </div>
+
+                        <div className='flex items-center justify-between w-full border-b border-dashed border-[#1D242B]/25'>
+                            <span>Expected Response:</span>
+                            <span>
+                                <strong>{submissionData?.expected_response_time}</strong>
+                            </span>
+                        </div>
+
+
+                        <span className='font-bold text-[18px] text-left pt-2'>Submission details</span>
+
 
                         <div className='flex items-center justify-between w-full border-b border-dashed border-[#1D242B]/25'>
                             <span>Room ID: </span>
@@ -649,7 +695,9 @@ export default function InquiryFormClient ({
                             </div>
                         )}
 
-                        <span className='text-center text-[14px] bg-[#A6EEAB]/50 leading-[1] rounded-[10px] text-[#00822F] w-fit px-3 py-2'>Your inquiry was sent successfully. We've emailed you a confirmation and will be in touch with you soon.</span>
+                        <span className='text-center text-[14px] bg-[#A6EEAB]/50 leading-[1] rounded-[10px] text-[#00822F] w-fit px-3 py-2'>{`The property owner/agent will contact you through your mobile number or your provided email.`}</span>
+
+
                     </div>
                 </div>
             ))}

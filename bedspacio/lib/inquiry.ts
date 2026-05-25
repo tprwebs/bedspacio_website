@@ -4,18 +4,37 @@ import { BASE_URL } from '@/config/config'
 import { error } from 'console';
 
 
-export const getAllInquiry = async () => {
-    try {
-        const response = await axios.get(`${BASE_URL}/inquiry/v1`, {
-            withCredentials: true
-        });
+// export const getAllInquiry = async () => {
+//     try {
+//         const response = await axios.get(`${BASE_URL}/inquiry/v1`, {
+//             withCredentials: true
+//         });
 
-        return response.data ?? [];
+//         return response.data ?? [];
 
-    } catch (err) {
-        console.error('Failed to retrieve room inquiries;');
-    }
-}
+//     } catch (err) {
+//         console.error('Failed to retrieve room inquiries;');
+//     }
+// }
+
+
+export const getAllInquiry = async (params: {
+    status?: string;
+    page?: number;
+    search?: string;
+} = {}) => {
+    const response = await axios.get(`${BASE_URL}/inquiry/v1`, {
+        params: {
+            status: params.status || undefined,
+            page: params.page || 1,
+            search: params.search || undefined,
+        },
+        withCredentials: true,
+    });
+
+    return response.data;
+};
+
 
 
 export const getInquiryById = async (id: number) => {
@@ -113,11 +132,26 @@ export const archiveInquirySingle = async (id: number) => {
 }
 
 
+export const unarchivedInquirySingle = async (id: number) => {
+    try {
+        const response = await axios.patch(
+            `${BASE_URL}/inquiry/v1/unarchive/${id}`,
+            { }, 
+            { withCredentials: true }
+        );
+
+        return response;
+
+    } catch (err) {
+        throw err;
+    }
+}
+
 export const archiveInquiryMultiple = async (ids: number[]) => {
     try {
         const response = await axios.patch(
             `${BASE_URL}/inquiry/v1/archive/multiple`,
-                ids,
+                { ids },
                 { withCredentials: true }
         );
 
@@ -129,13 +163,14 @@ export const archiveInquiryMultiple = async (ids: number[]) => {
 }
 
 
-export const unarchivedInquirySingle = async (id: number) => {
+
+export const unarchiveInquiryMultiple = async (ids: number[]) => {
     try {
         const response = await axios.patch(
-            `${BASE_URL}/inquiry/v1/unarchive/${id}`,
-            { }, 
-            { withCredentials: true }
-        );
+            `${BASE_URL}/inquiry/v1/unarchive/multiple`, 
+            { ids },
+            {  withCredentials: true }
+        )
 
         return response;
 
@@ -180,6 +215,23 @@ export const deleteSingleArchived = async (id: number) => {
         const response = await axios.delete(`${BASE_URL}/inquiry/v1/archived/${id}`, {
             withCredentials: true
         });
+
+        return response.data;
+
+    } catch (err) {
+        throw err;
+    }
+}
+
+
+export const deleteMultipleArchived = async (ids: number[]) => {
+    try {
+        const response = await axios.delete(
+            `${BASE_URL}/inquiry/v1/archive/multiple`, { 
+                data:{ ids },
+                withCredentials: true 
+            }
+        );
 
         return response.data;
 

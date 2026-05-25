@@ -43,6 +43,8 @@ export type ArchiveModalType = {
 }
 
 export default async function ArchivePage () {
+
+    // checks if a user is logged in
     const user = await requireUser()
     
     const archives = await getArchivedInquiries()

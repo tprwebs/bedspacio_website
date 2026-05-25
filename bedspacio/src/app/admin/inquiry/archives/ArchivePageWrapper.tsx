@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link";
 import { ArchiveType, ArchiveModalType } from "./page"
-import { deleteSingleArchived, getArchivedInquiries, getArchivedSingleById } from "../../../../../lib/inquiry";
+import { deleteMultipleArchived, deleteSingleArchived, getArchivedInquiries, getArchivedSingleById, unarchiveInquiryMultiple } from "../../../../../lib/inquiry";
 import ArchiveModalWrapper from "./ArchiveModalWrapper";
 
 // icons
@@ -13,6 +13,7 @@ import Arrow from '@/asset/icon/arrow-right.svg'
 import ErrorToast from "@/components/admin/Toast/ErrorToast";
 import SuccessToast from "@/components/admin/Toast/SuccessToast";
 import ConfirmWindow from "@/components/admin/Toast/ConfirmWindow";
+import WindowArchivesAction from "@/components/admin/WindowRestoreArchive";
 
 
 interface ArchiveProp {
@@ -32,7 +33,7 @@ export default function ArchivePageWrapper ({ archives }: ArchiveProp) {
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [successMessage, setSuccessMessage] = useState<string>('');
 
-    const [confirmType, setConfirmType] = useState<'single' | 'multiple'| null>(null);
+    const [confirmType, setConfirmType] = useState<'single' | 'multiple'| 'delete_multiple' | null>(null);
 
     const viewInquiryModal = async (id: number) => {
         const archived = await getArchivedSingleById(id);
@@ -83,6 +84,45 @@ export default function ArchivePageWrapper ({ archives }: ArchiveProp) {
     }
 
 
+    const handleRestoreArchives = async (ids: number[]) => {
+        try {
+            const restored = await unarchiveInquiryMultiple(ids);
+
+            if (restored) {
+                setSuccessMessage(`${ids.length} archived inquiries restored successfully!`)
+                setTimeout(() => setSuccessMessage(''), 3500);
+
+                return;
+            }
+
+            setConfirmType(null);
+            
+            
+
+        } catch (err) {
+            console.error('Failed to restore archives: ', err);
+        }
+    }
+
+    const handleDeleteArchives = async (ids: number[]) => {
+        try {
+            const deleted = await deleteMultipleArchived(ids);
+
+            if (deleted) {
+                setSuccessMessage(`${ids.length} archived inquiries deleted successfully!`);
+                setTimeout(() => setSuccessMessage(''), 3500);
+
+                return;
+            }
+
+            setConfirmType(null);
+
+        } catch (err) {
+            // error message
+        }
+    }
+
+
     const resetModal = () => {
         setModalOpen(false);
         setSelectedId(null);
@@ -93,7 +133,7 @@ export default function ArchivePageWrapper ({ archives }: ArchiveProp) {
     return (
         <>
             <div className="flex w-full min-h-screen">
-                <div className="flex flex-col w-full px-[8rem] py-[2rem] gap-[2rem]">
+                <div className="flex flex-col w-full px-[1rem] xl:px-[8rem] py-[2rem] gap-[2rem]">
                     
                     <div className="flex items-center justify-between w-full">
                         <span className="text-[28px] text-[#1D242B] font-bold leading-tight">Archived Inquiries</span>
@@ -185,6 +225,23 @@ export default function ArchivePageWrapper ({ archives }: ArchiveProp) {
                 </div>
             )}
 
+            
+            {checkList.length > 0 && (
+                <WindowArchivesAction
+                    count={checkList.length} 
+                    ids={checkList}
+                    onRestore={() => {
+                        setConfirmType('multiple')
+                    }}
+                    onConfirm={() => {
+                        setConfirmType('delete_multiple');
+                    }}
+                    onCancel={() => {
+                        setCheckList([])
+                    }}
+                />
+            )}
+
 
             {confirmType === 'single' && (
                 <ConfirmWindow 
@@ -202,6 +259,42 @@ export default function ArchivePageWrapper ({ archives }: ArchiveProp) {
                     }}
                 />
             )}
+
+
+            {confirmType === 'multiple' && (
+                <ConfirmWindow 
+                    title={`Restore Archives`}
+                    message={`You are about to restore ${checkList.length} archived inquiries. Do you want to proceed?`}
+                    onCancel={() => {
+                        setConfirmType(null);
+                        // setCheckList([]);
+                    }}
+                    onConfirm={async () => {
+                        await handleRestoreArchives(checkList)
+                        await loadArchives();
+                        setConfirmType(null)
+                        resetModal();
+                    }}
+                />
+            )}
+
+            {confirmType === 'delete_multiple' && (
+                <ConfirmWindow 
+                    title={`Delete Archives`}
+                    message={`You are about to delete ${checkList.length} archived inquiries. Do you want to proceed?`}
+                    onCancel={() => {
+                        setConfirmType(null);
+                        // setCheckList([]);
+                    }}
+                    onConfirm={async () => {
+                        await handleDeleteArchives(checkList)
+                        await loadArchives();
+                        setConfirmType(null)
+                        resetModal();
+                    }}
+                />
+            )}
+
 
 
             {errorMessage && <ErrorToast message={errorMessage} />}
